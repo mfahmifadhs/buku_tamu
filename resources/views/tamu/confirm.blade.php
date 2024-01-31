@@ -19,21 +19,21 @@
         <div class="card w-100 col-12">
             <div class="card-header">
                 <div class="row">
-                    <div class="form-group">
-                        <label class="col-md-4 col-2">Kode</label>
-                        <label class="col-md-8 col-8">: {{ $tamu->id_tamu }}</label>
+                    <div class="form-group" style="font-size: 16px;">
+                        <label class="col-md-4 col-3">Kode</label>
+                        <label class="col-md-7 col-8">: {{ $tamu->id_tamu }}</label>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-4 col-2">Tanggal</label>
-                        <label class="col-md-8 col-8">: {{ Carbon\Carbon::parse($tamu->tanggal_datang)->isoFormat('DD MMMM Y') }}</label>
+                        <label class="col-md-4 col-3">Tanggal</label>
+                        <label class="col-md-7 col-8">: {{ Carbon\Carbon::parse($tamu->tanggal_datang)->isoFormat('DD MMMM Y') }}</label>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-4 col-2">Jam</label>
-                        <label class="col-md-8 col-8">: {{ Carbon\Carbon::parse($tamu->jam_masuk)->isoFormat('HH:mm:ss') }}</label>
+                        <label class="col-md-4 col-3">Jam</label>
+                        <label class="col-md-7 col-8">: {{ Carbon\Carbon::parse($tamu->jam_masuk)->isoFormat('HH:mm:ss') }}</label>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-4 col-2">Nama</label>
-                        <label class="col-md-8 col-8">: {{ $tamu->nama_tamu }}</label>
+                        <label class="col-md-4 col-3">Nama</label>
+                        <label class="col-md-7 col-8">: {{ $tamu->nama_tamu }}</label>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                     <input type="text" class="form-control number text-center" name="no_visitor" placeholder="Nomor Visitor" required>
                 </div>
                 <div class="card-header text-center">
-                    <button type="submit" class="btn btn-success text-dark" onclick="confirmSubmit(event)">
+                    <button type="submit" class="btn btn-info text-dark" onclick="confirmSubmit(event)">
                         KIRIM
                     </button>
                 </div>
