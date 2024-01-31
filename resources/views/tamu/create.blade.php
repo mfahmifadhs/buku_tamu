@@ -28,13 +28,13 @@
                     <label class="font-weight-bold h5 pt-2">Form Tamu</label>
                 </div>
                 <div class="card-body">
-                    <p class="text-sm text-justify">
+                    <p class="text-sm" style="text-align: justify;">
                         Mohon untuk memastika area atau lokasi Pegawai/Pejabat yang akan dikunjungi dengan menanyakan kepada Resepsionis
                     </p>
                     <hr class="mt-2">
-                    <div class="row">
+                    <div class="row" style="font-size: 14px;font-weight: bold;">
                         <div class="form-group">
-                            <div class="col-md-3 col-form-label">Nama lengkap</div>
+                            <label class="col-md-3 col-form-label">Nama lengkap</label>
                             <div class="col-md-9">
                                 <input type="text" class="form-control" name="nama" required>
                             </div>
