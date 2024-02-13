@@ -124,8 +124,52 @@
                                         <div class="card-header">
                                             <div class="row text-sm">
                                                 <div class="col-md-12">
-                                                    <label><i class="fas fa-calendar"></i> Tanggal</label>
-                                                    <h6 id="timestamp"></h6>
+                                                    <label><i class="fas fa-square-poll-vertical"></i> Grafik Kepuasaan Tamu</label>
+                                                    <canvas id="surveyChart" style="height: 20px;"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <div class="row text-sm">
+                                                <div class="col-md-12">
+                                                    <label><i class="fas fa-users"></i> Total Tamu per-Instansi</label>
+                                                    <form action="">
+                                                        <table class="table">
+                                                            @foreach ($totalInstansi as $row)
+                                                            <tr>
+                                                                <td>
+                                                                    <button type="submit" class="border border-white bg-white" name="instansi" value="{{ !$row->instansi ? 'Lainnya' : $row->instansi->instansi }}">
+                                                                        {{ !$row->instansi ? 'Lainnya' : $row->instansi->instansi }}
+                                                                    </button>
+                                                                </td>
+                                                                <td class="text-right">{{ $row->total }} tamu</td>
+                                                            </tr>
+                                                            @endforeach
+                                                        </table>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <div class="row text-sm">
+                                                <div class="col-md-12">
+                                                    <label><i class="fas fa-building"></i> Total Tamu per-Lobi</label>
+                                                    <table class="table">
+                                                        @foreach ($totalLobi as $row)
+                                                        <tr>
+                                                            <td>{{ $row->lokasi_datang == 'lobi'? 'Gedung Sujudi' : 'Gedung Adhyatma, '. ucwords($row->lokasi_datang) }}</td>
+                                                            <td class="text-right">{{ $row->total }} tamu</td>
+                                                        </tr>
+                                                        @endforeach
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
@@ -269,6 +313,44 @@
 
             result.forEach(function(data, index) {
                 table.row.add([index + 1, data.month, data.total_tamu]).draw();
+            });
+        });
+    });
+</script>
+
+<script>
+    var surveyUrl = "{{ route('survey.chart') }}";
+    var Survey = [];
+    var SurveyTotal = [];
+
+    $(document).ready(function() {
+        $.get(surveyUrl, function(result) {
+            result.forEach(function(data) {
+                Survey.push(data.survei);
+                SurveyTotal.push(data.total_tamu);
+            });
+
+            var doughnutChartCanvas = document.getElementById('surveyChart').getContext('2d');
+            var doughnutChartData = {
+                labels: Survey,
+                datasets: [{
+                    data: SurveyTotal,
+                    backgroundColor: [
+                        'rgba(60, 179, 1, 0.8)',
+                        'rgba(255, 1, 1, 0.8)',
+                    ]
+                }]
+            };
+
+            var doughnutChartOptions = {
+                responsive: true,
+                maintainAspectRatio: true
+            };
+
+            new Chart(doughnutChartCanvas, {
+                type: 'doughnut',
+                data: doughnutChartData,
+                options: doughnutChartOptions
             });
         });
     });

@@ -25,12 +25,18 @@ class Tamu extends Model
         'nik_nip',
         'alamat_tamu',
         'no_telpon',
+        'instansi_id',
         'nama_instansi',
         'nama_tujuan',
         'keperluan',
         'nomor_visitor',
+        'survei',
         'foto_ktp'
     ];
+
+    public function instansi() {
+        return $this->belongsTo(Instansi::class, 'instansi_id');
+    }
 
     public function area() {
         return $this->belongsTo(Area::class, 'area_id');

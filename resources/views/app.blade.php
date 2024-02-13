@@ -19,6 +19,28 @@
 
 <body class="antialiased">
     <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
+        @if (Session::has('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '{{ Session::get("success") }}',
+            });
+        </script>
+        @elseif (Session::has('pending'))
+        <script>
+            Swal.fire({
+                icon: 'warning',
+                title: '{{ Session::get("pending") }}',
+            });
+        </script>
+        @elseif (Session::has('failed'))
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: '{{ Session::get("failed") }}',
+            });
+        </script>
+        @endif
 
         @yield('content')
 
@@ -26,6 +48,8 @@
 </body>
 
 <script src="{{ asset('dist/plugins/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('dist/admin/plugins/select2/js/select2.full.min.js') }}"></script>
+
 @yield('js')
 <script>
     function confirmSubmit(event, title, text) {

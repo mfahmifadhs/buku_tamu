@@ -58,16 +58,26 @@
                                 <input type="text" class="form-control" name="no_telepon" value="{{ $tamu->no_telpon }}" required>
                             </div>
                             <div class="form-group col-md-5">
-                                <label>Alamat</label>
-                                <input type="text" class="form-control" name="alamat" value="{{ $tamu->alamat_tamu }}" required>
+                                <label>Asal Instansi</label>
+                                <select name="instansi" class="form-control" required>
+                                    @foreach ($instansi as $row)
+                                    <option value="{{ $row->id_instansi }}" <?php echo $row->id_instansi == $tamu->instansi_id ? 'selected' : ''; ?>>
+                                        {{ $row->instansi }}
+                                    </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group col-md-4">
                                 <label>Asal Instansi</label>
-                                <input type="text" class="form-control" name="instansi" value="{{ $tamu->nama_instansi }}" required>
+                                <input type="text" class="form-control" name="nama_instansi" value="{{ $tamu->nama_instansi }}" required>
                             </div>
                             <div class="form-group col-md-3">
                                 <label>Nomor Visitor</label>
                                 <input type="text" class="form-control" name="nomor_visitor" value="{{ $tamu->nomor_visitor }}" required>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label>Alamat</label>
+                                <input type="text" class="form-control" name="alamat" value="{{ $tamu->alamat_tamu }}" required>
                             </div>
                         </div>
                         <hr>

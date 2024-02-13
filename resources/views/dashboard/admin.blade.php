@@ -54,6 +54,7 @@
                                     <th style="width: 12%;">Keperluan</th>
                                     <th style="width: 18%;">Lokasi Tujuan</th>
                                     <th style="width: 10%;">No. Visitor</th>
+                                    <th style="width: 30%;">Foto</th>
                                 </tr>
                             </thead>
                             <tbody class="text-sm">
@@ -69,7 +70,10 @@
                                     <td>{{ $row->jam_masuk }}</td>
                                     <td class="text-left">{{ $row->nama_tamu }}</td>
                                     <td>{{ $row->nik_nip }}</td>
-                                    <td>{{ $row->nama_instansi }}</td>
+                                    <td>
+                                        {{ $row->instansi?->instansi }} <br>
+                                        {{ $row->nama_instansi }}
+                                    </td>
                                     <td>{{ $row->nama_tujuan }}</td>
                                     <td class="text-left">{{ $row->keperluan }}</td>
                                     <td class="text-left">
@@ -78,6 +82,24 @@
                                         {{ $row->area->nama_sub_bagian }}
                                     </td>
                                     <td>No. {{ $row->nomor_visitor }}</td>
+                                    <td>
+
+                                        <a data-toggle="modal" data-target="#foto{{ $row->id_tamu }}">
+                                            <img src="{{ asset('storage/foto_tamu/' . $row->foto_tamu) }}"
+                                                class="img-fluid mt-3" alt="">
+                                        </a>
+
+                                        <div class="modal fade" id="foto{{ $row->id_tamu }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <img src="{{ asset('storage/foto_tamu/' . $row->foto_tamu) }}"
+                                                    class="img-fluid mt-3" alt="">
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

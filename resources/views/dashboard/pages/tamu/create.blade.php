@@ -56,16 +56,25 @@
                                 <input type="text" class="form-control" name="no_telepon" placeholder="No Telepon" required>
                             </div>
                             <div class="form-group col-md-5">
-                                <label>Alamat</label>
-                                <input type="text" class="form-control" name="alamat" placeholder="Alamat lengkap" required>
+                                <label>Instansi</label>
+                                <select name="instansi" class="form-control" required>
+                                    <option value="">-- Pilih Instansi --</option>
+                                    @foreach ($instansi as $row)
+                                    <option value="{{ $row->id_instansi }}">{{ $row->instansi }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group col-md-4">
                                 <label>Asal Instansi</label>
-                                <input type="text" class="form-control" name="instansi" placeholder="Nama Instansi" required>
+                                <input type="text" class="form-control" name="nama_instansi" placeholder="Nama Instansi" required>
                             </div>
                             <div class="form-group col-md-3">
                                 <label>Nomor Visitor</label>
                                 <input type="text" class="form-control" name="nomor_visitor" placeholder="No. Visitor" required>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <label>Alamat</label>
+                                <input type="text" class="form-control" name="alamat" placeholder="Alamat lengkap" required>
                             </div>
                         </div>
                         <hr>

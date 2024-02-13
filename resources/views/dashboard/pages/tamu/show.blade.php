@@ -25,6 +25,7 @@
                         <li class="breadcrumb-item active">Daftar Tamu</li>
                     </ol>
                 </div>
+                @if (Auth::user()->role_id != 2)
                 <div class="col-sm-6 text-right mt-4">
                     <a id="downloadButton" onclick="downloadFile('excel')" class="btn btn-csv bg-success border-success" target="__blank">
                         <span class="btn btn-success btn-sm"><i class="fas fa-download"></i></span>
@@ -37,6 +38,7 @@
                         <small>Cetak</small>
                     </a>
                 </div>
+                @endif
             </div>
         </div>
     </div>
@@ -117,6 +119,7 @@
                                     <th style="width: 12%;">Keperluan</th>
                                     <th style="width: 18%;">Lokasi Tujuan</th>
                                     <th style="width: 10%;">No. Visitor</th>
+                                    <th style="width: 10%;">Foto</th>
                                 </tr>
                             </thead>
                             <tbody class="text-sm">
@@ -136,24 +139,52 @@
                                         @endif
                                     </td>
                                     <td class="text-left">
-                                        @php $lokasi = $row->lokasi_datang == 'lobi-a' ? 'Lobi A, Adhyatma' : ($row->lokasi_data == 'lobi-c' ? 'Lobi C, Adhyatma' : 'Lobi Sujudi'); @endphp
-                                        Lokasi : {{ $lokasi }} <br>
-                                        Masuk : {{ $row->jam_masuk }} <br>
-                                        Keluar <span style="margin-left: 2.8px;">:</span> {{ $row->jam_keluar }}
+                                        @php $lokasi = $row->lokasi_datang == 'lobi-a' ? 'Lobi A, Adhyatma' : ($row->lokasi_datang == 'lobi-c' ? 'Lobi C, Adhyatma' : 'Lobi Sujudi'); @endphp
+                                        <i class="fas fa-building"></i> &ensp;: {{ $lokasi }} <br>
+                                        <i class="fas fa-person-walking-arrow-right"></i> : {{ $row->jam_masuk }} <br>
+                                        <i class="fas fa-person-walking-arrow-loop-left"></i> : {{ $row->jam_keluar }} <br>
+                                        <i class="fas fa-square-poll-vertical"></i> :
+
+                                        @if ($row->survei && $row->survei == 'puas')
+                                        <span class="badge badge-success">Puas</span>
+                                        @elseif ($row->survei && $row->survei == 'tidak')
+                                        <span class="badge badge-danger">Tidak Puas</span>
+                                        @endif
                                     </td>
                                     <td class="text-left">
+                                        @if (Auth::user()->role_id == 2)
                                         <div class="row">
-                                            <div class="col-md-4">Nama</div>
-                                            <div class="col-md-7">: {{ $row->nama_tamu }}</div>
-                                            <div class="col-md-4">NIK_NIP</div>
-                                            <div class="col-md-7">: {{ $row->nik_nip }}</div>
-                                            <div class="col-md-4">No. Telp</div>
-                                            <div class="col-md-7">: {{ $row->no_telpon }}</div>
-                                            <div class="col-md-4">Alamat</div>
-                                            <div class="col-md-7">: {{ $row->alamat_tamu }}</div>
-                                            <div class="col-md-4">Asal Instansi</div>
-                                            <div class="col-md-7">: {{ $row->nama_instansi }}</div>
+                                            <div class="col-md-1"><i class="fas fa-user"></i></div>
+                                            <div class="col-md-11">: {{ $row->nama_tamu }}</div>
+                                            <div class="col-md-1"><i class="fas fa-id-card"></i></div>
+                                            <div class="col-md-11">: {{ substr($row->nik_nip, 0, 5) . '*********' . substr($row->nik_nip, -2) }}</div>
+                                            <div class="col-md-1"><i class="fas fa-phone"></i></div>
+                                            <div class="col-md-11">: {{ substr($row->no_telpon, 0, 5) . '*****' . substr($row->no_telpon, -2) }}</div>
+                                            <div class="col-md-1"><i class="fas fa-address-card"></i></div>
+                                            <div class="col-md-11">: {{ substr($row->alamat_tamu, 0, 3) . '***' }}</div>
+                                            <div class="col-md-1"><i class="fas fa-building-user"></i></div>
+                                            <div class="col-md-11">:
+                                                {{ $row->instansi?->instansi }} <br>
+                                                &ensp;{{ $row->nama_instansi }}
+                                            </div>
                                         </div>
+                                        @else
+                                        <div class="row">
+                                            <div class="col-md-1"><i class="fas fa-user"></i></div>
+                                            <div class="col-md-11">: {{ $row->nama_tamu }}</div>
+                                            <div class="col-md-1"><i class="fas fa-id-card"></i></div>
+                                            <div class="col-md-11">: {{ $row->nik_nip }}</div>
+                                            <div class="col-md-1"><i class="fas fa-phone"></i></div>
+                                            <div class="col-md-11">: {{ $row->no_telpon }}</div>
+                                            <div class="col-md-1"><i class="fas fa-address-card"></i></div>
+                                            <div class="col-md-11">: {{ $row->alamat_tamu }}</div>
+                                            <div class="col-md-1"><i class="fas fa-building-user"></i></div>
+                                            <div class="col-md-11">:
+                                                {{ $row->instansi?->instansi }} <br>
+                                                &ensp;{{ $row->nama_instansi }}
+                                            </div>
+                                        </div>
+                                        @endif
                                     </td>
                                     <td>{{ $row->nama_tujuan }}</td>
                                     <td class="text-left">{{ $row->keperluan }}</td>
@@ -163,6 +194,23 @@
                                         {{ $row->area->nama_sub_bagian }}
                                     </td>
                                     <td>No. {{ $row->nomor_visitor }}</td>
+                                    <td>
+                                        <a data-toggle="modal" data-target="#foto{{ $row->id_tamu }}">
+                                            <img src="{{ asset('storage/foto_tamu/' . $row->foto_tamu) }}"
+                                                class="img-fluid mt-3" alt="">
+                                        </a>
+
+                                        <div class="modal fade" id="foto{{ $row->id_tamu }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <img src="{{ asset('storage/foto_tamu/' . $row->foto_tamu) }}"
+                                                    class="img-fluid mt-3" alt="">
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <link href="{{ asset('dist/css/bootstrap.min.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('dist/plugins/select2/css/select2.min.css') }}">
     <!-- Sweet alert -->
@@ -848,5 +849,18 @@
 <script src="{{ asset('dist/plugins/select2/js/select2.full.min.js') }}"></script>
 
 @yield('js')
+
+<script>
+    $(document).ready(function() {
+        $('.number').on('input', function() {
+            // Menghapus karakter selain angka (termasuk tanda titik koma sebelumnya)
+            var value = $(this).val().replace(/[^0-9]/g, '');
+            // Format dengan menambahkan titik koma setiap tiga digit
+            var formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, '');
+
+            $(this).val(formattedValue);
+        });
+    });
+</script>
 
 </html>

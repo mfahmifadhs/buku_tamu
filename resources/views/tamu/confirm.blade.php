@@ -3,10 +3,11 @@
 
 @if (Session::has('success'))
 <script>
-    Swal.fire({
-        icon: 'success',
-        title: '{{ Session::get("success") }}',
-    });
+    alert('Berhasil Mengisi Form!')
+    // Swal.fire({
+    //     icon: 'success',
+    //     title: '{{ Session::get("success") }}',
+    // });
 </script>
 @endif
 
@@ -40,10 +41,10 @@
             <form id="form" action="{{ route('tamu.no_visitor', ['gedung' => $gedung, 'lobi' => $lobi, 'id' => $id ]) }}" method="POST">
                 @csrf
                 <div class="card-header">
-                    <input type="text" class="form-control number text-center" name="no_visitor" placeholder="Nomor Visitor" required>
+                    <input type="text" class="form-control number text-center number" name="no_visitor" placeholder="Nomor Visitor" required>
                 </div>
                 <div class="card-header text-center">
-                    <button type="submit" class="btn btn-info text-dark" onclick="confirmSubmit(event)">
+                    <button type="submit" class="btn btn-info text-dark" onclick="return confirm('Apakah nomor visitor sudah sesuai ?')">
                         KIRIM
                     </button>
                 </div>

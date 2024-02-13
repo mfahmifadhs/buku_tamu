@@ -29,6 +29,8 @@ Route::get('/login', function () {
     return view('login');
 })->name('login');
 
+Route::get('ck/{gedung}/{lobi}', [TamuController::class, 'formCheckout'])->name('checkout');
+
 
 Route::get('keluar', [AuthController::class, 'keluar'])->name('keluar');
 Route::post('login', [AuthController::class, 'postLogin'])->name('post.login');
@@ -39,6 +41,9 @@ Route::get('form/berhasil/{gedung}/{lobi}/{id}', [TamuController::class, 'confir
 
 Route::post('form/berhasil/{gedung}/{lobi}/{id}', [TamuController::class, 'confirm'])->name('tamu.no_visitor');
 Route::post('form/{gedung}', [TamuController::class, 'store'])->name('tamu.store');
+
+Route::get('survei-kepuasan', [TamuController::class, 'survei'])->name('survei');
+Route::get('checkout/tamu/{survei}/{id}', [TamuController::class, 'checkoutStore'])->name('checkout.store');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -62,7 +67,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('tamu/edit/{id}', [TamuController::class, 'update'])->name('tamu.update');
     Route::post('tamu/tambah', [TamuController::class, 'storeByAdmin'])->name('tamu.admin.store');
 
-
     Route::get('pegawai', [PegawaiController::class, 'index'])->name('pegawai.show');
     Route::get('pegawai/tambah', [PegawaiController::class, 'create'])->name('pegawai.create');
     Route::get('pegawai/edit/{id}', [PegawaiController::class, 'edit'])->name('pegawai.edit');
@@ -72,4 +76,5 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('gedung/select', [GedungController::class, 'select'])->name('gedung.select');
     Route::get('area/select/{id}', [AreaController::class, 'select'])->name('area.select');
+    Route::get('survey/chart', [TamuController::class, 'surveyGrafik'])->name('survey.chart');
 });

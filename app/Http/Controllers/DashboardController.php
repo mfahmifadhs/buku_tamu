@@ -26,6 +26,9 @@ class DashboardController extends Controller
         $tahun = $request->get('tahun', Carbon::now()->format('Y'));
         $bulan = $request->get('bulan', Carbon::now()->format('m'));
         $tahunBulan = $request->get('tahunBulan', Carbon::now()->format('Y'));
+        $totalInstansi = Tamu::select('instansi_id', DB::raw('COUNT(id_tamu) as total'))->groupBy('instansi_id')->get();
+        $totalLobi     = Tamu::select('lokasi_datang', DB::raw('COUNT(id_tamu) as total'))->groupBy('lokasi_datang')->get();
+
 
         if ($role == 2) {
             $query    = Tamu::where('jam_keluar', null)->where('nomor_visitor','!=', null)->orderBy('id_tamu', 'DESC');
@@ -46,7 +49,7 @@ class DashboardController extends Controller
             $position = '';
         }
 
-        return view('dashboard.' . $user, compact('name', 'position', 'tamu', 'bulan', 'tahun', 'tahunBulan'));
+        return view('dashboard.' . $user, compact('name', 'position', 'tamu', 'bulan', 'tahun', 'tahunBulan', 'totalInstansi', 'totalLobi'));
 
     }
 

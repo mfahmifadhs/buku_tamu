@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 use App\Models\Area;
 use App\Models\Tamu;
 use App\Models\Gedung;
+use App\Models\Instansi;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Auth;
 use DB;
+use Illuminate\Support\Facades\Storage;
 
 class TamuController extends Controller
 {
@@ -36,12 +38,17 @@ class TamuController extends Controller
     {
         $gedung = $id == 'adhyatma' ? 1 : 2;
         $area   = Area::where('gedung_id', $gedung)->get();
+        $instansi = Instansi::orderBy('id_instansi', 'DESC')->get();
 
-        return view('tamu.create', compact('area', 'id', 'gedung', 'lobi'));
+        return view('tamu.create', compact('area', 'id', 'gedung', 'lobi', 'instansi'));
     }
 
     public function store(Request $request, $id)
     {
+        if (!$request->input('capturedImage')) {
+            return back()->with('failed', 'Anda belum mengambil gambar');
+        }
+
         $total   = str_pad(Tamu::withTrashed()->count() + 1, 4, 0, STR_PAD_LEFT);
         $id_tamu = Carbon::now()->format('ymdHis') . $total;
         $lobi    = $request->lokasi_datang;
@@ -55,11 +62,30 @@ class TamuController extends Controller
         $tambah->nik_nip        = $request->nik_nip;
         $tambah->alamat_tamu    = $request->alamat;
         $tambah->no_telpon      = $request->no_telp;
-        $tambah->nama_instansi  = $request->instansi;
+        $tambah->instansi_id    = $request->instansi;
+        $tambah->nama_instansi  = $request->nama_instansi;
         $tambah->nama_tujuan    = $request->nama_tujuan;
         $tambah->keperluan      = $request->keperluan;
         $tambah->created_at     = Carbon::now();
         $tambah->save();
+
+
+        $filePict64 = $request->input('capturedImage');
+
+        list($type, $filePict64) = explode(';', $filePict64);
+        list(, $filePict64) = explode(',', $filePict64);
+        $fileDecoded = base64_decode($filePict64);
+
+        $fileName = 'file_' . now()->timestamp . '.png';
+        $filePath = 'public/foto_tamu/' . $fileName;
+
+        Storage::put($filePath, $fileDecoded);
+
+
+        Tamu::where('id_tamu', $id_tamu)->update([
+            'foto_tamu' => $fileName
+        ]);
+
 
         return redirect()->route('tamu.confirm', ['gedung' => $id, 'lobi' => $lobi, 'id' => $id_tamu])->with('success', 'Berhasil Mengisi Form');
     }
@@ -138,9 +164,10 @@ class TamuController extends Controller
 
     public function edit($id)
     {
-        $gedung = Gedung::get();
-        $tamu   = Tamu::where('id_tamu', $id)->first();
-        return view('dashboard.pages.tamu.edit', compact('id', 'gedung', 'tamu'));
+        $gedung   = Gedung::get();
+        $tamu     = Tamu::where('id_tamu', $id)->first();
+        $instansi = Instansi::orderBy('id_instansi', 'DESC')->get();
+        return view('dashboard.pages.tamu.edit', compact('id', 'gedung', 'tamu', 'instansi'));
     }
 
     public function update(Request $request, $id)
@@ -154,7 +181,8 @@ class TamuController extends Controller
             'nik_nip'        => $request->nik_nip,
             'alamat_tamu'    => $request->alamat,
             'no_telpon'      => $request->no_telepon,
-            'nama_instansi'  => $request->instansi,
+            'instansi_id'    => $request->instansi,
+            'nama_instansi'  => $request->nama_instansi,
             'nama_tujuan'    => $request->nama_tujuan,
             'keperluan'      => $request->keperluan,
             'nomor_visitor'  => $request->nomor_visitor
@@ -168,6 +196,7 @@ class TamuController extends Controller
         $lobi = '';
         $dataGedung = Gedung::orderBy('nama_gedung', 'ASC');
         $dataArea   = Area::orderBy('id_area', 'ASC');
+        $instansi   = Instansi::orderBy('id_instansi', 'DESC')->get();
 
         if (Auth::user()->id == 3) {
             $lobi   = 'lobi';
@@ -183,7 +212,7 @@ class TamuController extends Controller
             $area   = $dataArea->where('id_gedung', 1)->get();
         }
 
-        return view('dashboard.pages.tamu.create', compact('gedung', 'area', 'lobi'));
+        return view('dashboard.pages.tamu.create', compact('gedung', 'area', 'lobi', 'instansi'));
     }
 
     public function storeByAdmin(Request $request)
@@ -202,7 +231,8 @@ class TamuController extends Controller
         $tambah->nik_nip        = $request->nik_nip;
         $tambah->alamat_tamu    = $request->alamat;
         $tambah->no_telpon      = $request->no_telepon;
-        $tambah->nama_instansi  = $request->instansi;
+        $tambah->instansi_id    = $request->instansi;
+        $tambah->nama_instansi  = $request->nama_instansi;
         $tambah->nama_tujuan    = $request->nama_tujuan;
         $tambah->keperluan      = $request->keperluan;
         $tambah->nomor_visitor  = $request->nomor_visitor;
@@ -244,6 +274,55 @@ class TamuController extends Controller
                 ->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), $tahun)
                 ->get();
         }
+
+        return response()->json($result);
+    }
+
+    public function formCheckout($gedung, $id)
+    {
+        $idGedung = $gedung == 'adhyatma' ? 1 : 2;
+        $gedung   = Gedung::where('id_gedung', $idGedung)->first();
+
+        return view('checkout', compact('gedung', 'id'));
+    }
+
+    public function survei(Request $request)
+    {
+        $today = Carbon::now()->format('Y-m-d');
+        $tamu  = Tamu::where('nomor_visitor', $request->no_visitor)
+                ->where('lokasi_datang', $request->lobi)
+                // ->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y-%m-%d')"), $today)
+                ->where('jam_keluar', null)
+                ->first();
+
+        if (!$tamu) {
+            return back()->with('failed', 'Tamu dengan no. visitor '. $request->no_visitor .' tidak ditemukan');
+        }
+
+        return view('survey', compact('tamu'));
+    }
+
+    public function checkoutStore($survei, $id)
+    {
+        $tamu = Tamu::where('id_tamu', $id)->first();
+        $gedung = $tamu->area->gedung_id == 1 ? 'adhyatma' : 'sujudi';
+        $lobi   = $tamu->lokasi_datang;
+
+        Tamu::where('id_tamu', $id)->update([
+            'survei' => $survei,
+            'jam_keluar' => Carbon::now()
+        ]);
+
+        return redirect()->route('checkout', ['gedung' => $gedung, 'lobi' => $lobi]);
+    }
+
+
+    public function surveyGrafik(Request $request)
+    {
+        $result = Tamu::select('survei', DB::raw("count(id_tamu) as total_tamu "))
+                ->groupBy('survei')
+                ->where('survei', '!=', null)
+                ->get();
 
         return response()->json($result);
     }
