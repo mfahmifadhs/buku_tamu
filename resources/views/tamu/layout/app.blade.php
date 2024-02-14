@@ -836,7 +836,7 @@
     </style>
 </head>
 
-<body class="antialiased">
+<body class="antialiased" style="background-color: #111827">
     @yield('content')
 </body>
 

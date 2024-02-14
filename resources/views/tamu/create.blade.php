@@ -8,21 +8,21 @@
 @endif
 
 @if (Session::has('failed'))
-    <script>
-        alert('Anda belum melakukan pengambilan gambar');
-    </script>
+<script>
+    alert('Anda belum melakukan pengambilan gambar');
+</script>
 @endif
 
 
 <section class="content">
-    <div class="image text-center">
-        <img src="{{ asset('dist/img/logo-kemenkes.png') }}" alt="kemenkes" class="w-50 mt-3">
+    <div class="">
+        <img src="{{ asset('dist/img/logo-kemenkes.png') }}" alt="kemenkes" class="w-25 mt-3 mx-auto">
     </div>
     <div class="container-fluid d-flex justify-content-center align-items-center mb-3">
         <form id="form" action="{{ route('tamu.store', $id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="lokasi_datang" value="{{ $lobi }}">
-            <div class="card mt-4">
+            <div class="card mt-4 col-md-6 col-12 border border-dark mx-auto">
                 <div class="card-header">
                     <label class="font-weight-bold h5 pt-2">Form Tamu</label>
                 </div>
@@ -32,85 +32,67 @@
                     </p>
                     <hr class="mt-2">
                     <div class="row" style="font-size: 14px;font-weight: bold;">
-                        <div class="form-group">
-                            <label class="col-md-3 col-form-label">Full Name*</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="nama" placeholder="Nama lengkap" required>
-                            </div>
+                        <div class="form-group mt-2">
+                            <label class="col-form-label">Full Name*</label>
+                            <input type="text" class="form-control" name="nama" placeholder="Nama lengkap" required>
                         </div>
 
                         <div class="form-group mt-2">
-                            <div class="col-md-3 col-form-label">NIK/NIP*</div>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control number" name="nik_nip" placeholder="NIK / NIP" required>
-                            </div>
+                            <div class="col-form-label">NIK/NIP*</div>
+                            <input type="text" class="form-control number" name="nik_nip" placeholder="NIK / NIP" required>
                         </div>
 
                         <div class="form-group mt-2">
-                            <div class="col-md-3 col-form-label">Address*</div>
-                            <div class="col-md-9">
-                                <textarea class="form-control" name="alamat" placeholder="Alamat lengkap sesuai KTP" required></textarea>
-                            </div>
+                            <div class=" col-form-label">Address*</div>
+                            <textarea class="form-control" name="alamat" placeholder="Alamat lengkap sesuai KTP" required></textarea>
                         </div>
 
                         <div class="form-group mt-2">
-                            <div class="col-md-3 col-form-label">Phone Number*</div>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control number" name="no_telp" placeholder="No. Telepon aktif" required>
-                            </div>
+                            <div class="col-form-label">Phone Number*</div>
+                            <input type="text" class="form-control number" name="no_telp" placeholder="No. Telepon aktif" required>
                         </div>
 
                         <div class="form-group mt-3">
-                            <div class="col-md-3 col-form-label">Instance*</div>
-                            <div class="col-md-9">
-                                <select name="instansi" class="form-control" required>
-                                    <option value="">-- Pilih Instansi --</option>
-                                    @foreach($instansi as $row)
-                                    <option value="{{ $row->id_instansi }}">{{ $row->instansi }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            <div class="col-form-label">Instance*</div>
+                            <select name="instansi" class="form-control" required>
+                                <option value="">-- Pilih Instansi --</option>
+                                @foreach($instansi as $row)
+                                <option value="{{ $row->id_instansi }}">{{ $row->instansi }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="form-group mt-3">
-                            <div class="col-md-3 col-form-label">Instance Name*</div>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="nama_instansi" placeholder="Tulis (-) jika pilihan Instansi 'Pribadi'" required>
-                            </div>
+                            <div class="col-form-label">Instance Name*</div>
+                            <input type="text" class="form-control" name="nama_instansi" placeholder="Tulis (-) jika pilihan Instansi 'Pribadi'" required>
                         </div>
 
                         <div class="form-group mt-3">
-                            <div class="col-md-3 col-form-label">Employee/Officer Name to Meet*</div>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="nama_tujuan" placeholder="Nama pegawai/pejabat yang ingin ditemui" required>
-                            </div>
+                            <div class="col-form-label">Employee/Officer Name to Meet*</div>
+                            <input type="text" class="form-control" name="nama_tujuan" placeholder="Nama pegawai/pejabat yang ingin ditemui" required>
                         </div>
 
                         <div class="form-group mt-3">
-                            <div class="col-md-3 col-form-label">Purpose*</div>
-                            <div class="col-md-9">
-                                <textarea class="form-control" name="keperluan" placeholder="Keperluan kunjungan" required></textarea>
-                            </div>
+                            <div class="col-form-label">Purpose*</div>
+                            <textarea class="form-control" name="keperluan" placeholder="Keperluan kunjungan" required></textarea>
                         </div>
 
                         <div class="form-group mt-3">
-                            <div class="col-md-3 col-form-label">Destination Area*</div>
-                            <div class="col-md-9">
-                                <select name="area_id" class="form-control" required>
-                                    <option value="">-- PILIH AREA TUJUAN --</option>
-                                    @foreach ($area as $row)
-                                    @if ($gedung == 1)
-                                    <option value="{{ $row->id_area }}">
-                                        {{ $row->nama_lantai.'  ('.$row->nama_ruang.') - '. $row->nama_sub_bagian }}
-                                    </option>
-                                    @else
-                                    <option value="{{ $row->id_area }}">
-                                        {{ $row->nama_lantai.' - '.$row->nama_sub_bagian }}
-                                    </option>
-                                    @endif
-                                    @endforeach
-                                </select>
-                            </div>
+                            <div class="col-form-label">Destination Area*</div>
+                            <select name="area_id" class="form-control" required>
+                                <option value="">-- PILIH AREA TUJUAN --</option>
+                                @foreach ($area as $row)
+                                @if ($gedung == 1)
+                                <option value="{{ $row->id_area }}">
+                                    {{ $row->nama_lantai.'  ('.$row->nama_ruang.') - '. $row->nama_sub_bagian }}
+                                </option>
+                                @else
+                                <option value="{{ $row->id_area }}">
+                                    {{ $row->nama_lantai.' - '.$row->nama_sub_bagian }}
+                                </option>
+                                @endif
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="form-group mt-3">
