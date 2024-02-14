@@ -1,16 +1,16 @@
 @extends('app')
 
 @section('content')
-<div class="max-w-7xl mx-auto p-6 lg:p-8">
+<div class="max-w-7xl mx-auto p-6 lg:p-8" style="background-color: blue;">
     <div class="flex justify-center">
-        <img src="{{ asset('dist/img/logo-kemenkes.png') }}" alt="kemenkes" width="750">
+        <img src="{{ asset('dist/img/logo-kemenkes.png') }}" alt="kemenkes" width="500">
     </div>
 
     <p class="text-white text-center mt-8 mb-4 text-capitalize">
         {{ $gedung->nama_gedung }}, {{ $id }}
     </p>
     <div class="flex items-center justify-center">
-        <div class="grid grid-cols-1 md:grid-cols-1 gap-6 lg:gap-8" style="width: 75%;">
+        <div class="grid grid-cols-1 md:grid-cols-1 gap-6 lg:gap-8" style="width: 100%;">
 
             <div class="scale-100 p-6 dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none" style="background-color: #2bbecf;">
                 <div class="text-center">
@@ -20,7 +20,7 @@
                         <h2 class="my-2 text-xl font-semibold text-gray-900 dark:text-white">
                             Nomor Visitor
                         </h2>
-                        <input type="text" name="no_visitor" class="form-control text-center form-control-lg">
+                        <input type="number" name="no_visitor" class="form-control text-center form-control-lg">
                         <button class="btn btn-default hover:bg-secondary border-white text-white mt-3">
                             <i class="fas fa-paper-plane"></i> Kirim
                         </button>
