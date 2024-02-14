@@ -43,7 +43,7 @@
 
         <div class="max-w-7xl mx-auto p-6 lg:p-8">
             <div class="flex justify-center">
-                <img src="{{ asset('dist/img/logo-kemenkes.png') }}" alt="kemenkes" width="500">
+                <img src="{{ asset('dist/img/logo-kemenkes.png') }}" alt="kemenkes" width="400">
             </div>
 
             <p class="text-white text-center mt-8 mb-4 text-capitalize">
@@ -62,7 +62,7 @@
                                 </h2>
                                 <input type="number" name="no_visitor" class="form-control text-center form-control-lg">
                                 <button class="btn btn-default hover:bg-secondary border-white text-white mt-3">
-                                    <i class="fas fa-paper-plane"></i> Kirim
+                                    <i class="fas fa-magnifying-glass"></i> <b>Cek Visitor</b>
                                 </button>
                             </form>
                         </div>
