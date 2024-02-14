@@ -53,12 +53,12 @@
 
                     <div class="scale-100 dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none" style="background-color: #2bbecf;">
                         <div class="text-center">
-                            <div class="row mt-3">
+                            <div class="row mt-5">
                                 <div class="col-md-5 col-6 text-right">
                                     <center>
                                         <a href="#" data-url="{{ route('checkout.store', ['survei' => 'puas', 'id' => $tamu->id_tamu]) }}" onclick="confirm(event)">
                                             <img src="{{ asset('dist/img/puas.png') }}" width="150">
-                                            <h1 class="my-3 fa-2x"><b>PUAS</b></h1>
+                                            <h1 class="my-4 fa-2x"><b>PUAS</b></h1>
                                         </a>
                                     </center>
                                 </div>
@@ -66,7 +66,7 @@
                                     <center>
                                         <a href="#" data-url="{{ route('checkout.store', ['survei' => 'tidak', 'id' => $tamu->id_tamu]) }}" onclick="confirm(event)">
                                             <img src="{{ asset('dist/img/tidak-puas.png') }}" width="210">
-                                            <h1 class="my-3 fa-2x" style="margin-left: 8vh;"><b>TIDAK PUAS</b></h1>
+                                            <h1 class="my-4 fa-2x" style="margin-left: 8vh;"><b>TIDAK PUAS</b></h1>
                                         </a>
                                     </center>
                                 </div>
