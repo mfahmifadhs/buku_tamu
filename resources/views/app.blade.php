@@ -18,7 +18,7 @@
 </head>
 
 <body class="antialiased">
-    <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen selection:bg-red-500 selection:text-white" style="background-color: #111827;">
+    <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen selection:bg-red-500 selection:text-white" style="background-color: #111827">
         @if (Session::has('success'))
         <script>
             Swal.fire({

@@ -15,7 +15,6 @@
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('dist/plugins/select2/css/select2.min.css') }}">
     <!-- Sweet alert -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Styles -->
