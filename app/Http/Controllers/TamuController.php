@@ -37,7 +37,7 @@ class TamuController extends Controller
     public function create($id, $lobi)
     {
         $gedung = $id == 'adhyatma' ? 1 : 2;
-        $area   = Area::where('gedung_id', $gedung)->get();
+        $area   = Area::where('gedung_id', $gedung)->orderBy('nama_lantai', 'ASC')->get();
         $instansi = Instansi::orderBy('id_instansi', 'DESC')->get();
 
         return view('tamu.create', compact('area', 'id', 'gedung', 'lobi', 'instansi'));
