@@ -46,31 +46,34 @@
                 <img src="{{ asset('dist/img/logo-kemenkes.png') }}" alt="kemenkes" width="250">
             </div>
             <p class="text-white text-center mt-8 mb-4 text-capitalize fa-2x col-12 text-uppercase">
-                TERIMA KASIH <b>{{ $tamu->nama_tamu }}</b> SUDAH BERKUNJUNG
+                TERIMA KASIH SUDAH BERKUNJUNG
             </p>
             <div class="flex items-center justify-center">
                 <div class="grid grid-cols-1 md:grid-cols-1 gap-6 lg:gap-8" style="width: 120vh;">
 
                     <div class="scale-100 dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none" style="background-color: #2bbecf;">
                         <div class="text-center">
-                            <div class="row mt-5">
-                                <div class="col-md-5 col-6 text-right">
-                                    <center>
-                                        <a href="#" data-url="{{ route('checkout.store', ['survei' => 'puas', 'id' => $tamu->id_tamu]) }}" onclick="confirm(event)">
-                                            <img src="{{ asset('dist/img/puas.png') }}" width="150">
-                                            <h1 class="my-4 fa-2x"><b>PUAS</b></h1>
-                                        </a>
-                                    </center>
+                            <form action="{{ route('checkout.store', ['survei' => 'hasil', 'id' => '*']) }}" method="GET">
+                                <input type="hidden" name="tamu" value="{{ implode(',', $tamu->pluck('id_tamu')->toArray()) }}">
+                                <div class="row mt-5">
+                                    <div class="col-md-5 col-6 text-right">
+                                        <center>
+                                            <button type="submit" name="feedback" value="puas">
+                                                <img src="{{ asset('dist/img/puas.png') }}" width="150">
+                                                <h1 class="my-4 fa-2x"><b>PUAS</b></h1>
+                                            </button>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-7 col-6">
+                                        <center>
+                                            <button type="submit" name="feedback" value="tidak">
+                                                <img src="{{ asset('dist/img/tidak-puas.png') }}" width="210">
+                                                <h1 class="my-4 fa-2x" style="margin-left: 8vh;"><b>TIDAK PUAS</b></h1>
+                                            </button>
+                                        </center>
+                                    </div>
                                 </div>
-                                <div class="col-md-7 col-6">
-                                    <center>
-                                        <a href="#" data-url="{{ route('checkout.store', ['survei' => 'tidak', 'id' => $tamu->id_tamu]) }}" onclick="confirm(event)">
-                                            <img src="{{ asset('dist/img/tidak-puas.png') }}" width="210">
-                                            <h1 class="my-4 fa-2x" style="margin-left: 8vh;"><b>TIDAK PUAS</b></h1>
-                                        </a>
-                                    </center>
-                                </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>

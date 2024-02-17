@@ -78,9 +78,9 @@ class TamuController extends Controller
 
         $fileName = 'file_' . now()->timestamp . '.png';
         $filePath = 'public/foto_tamu/' . $fileName;
-
+	
         Storage::put($filePath, $fileDecoded);
-
+	//dd($fileName);
 
         Tamu::where('id_tamu', $id_tamu)->update([
             'foto_tamu' => $fileName
@@ -293,25 +293,29 @@ class TamuController extends Controller
                 ->where('lokasi_datang', $request->lobi)
                 // ->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y-%m-%d')"), $today)
                 ->where('jam_keluar', null)
-                ->first();
+                ->get();
 
-        if (!$tamu) {
+        if ($tamu->count() == 0) {
             return back()->with('failed', 'Tamu dengan no. visitor '. $request->no_visitor .' tidak ditemukan');
         }
 
         return view('survey', compact('tamu'));
     }
 
-    public function checkoutStore($survei, $id)
+    public function checkoutStore(Request $request, $survei, $id)
     {
-        $tamu = Tamu::where('id_tamu', $id)->first();
+        $tamuIds = explode(',', $request->tamu);
+
+        $tamu   = Tamu::where('id_tamu', $tamuIds)->first();
         $gedung = $tamu->area->gedung_id == 1 ? 'adhyatma' : 'sujudi';
         $lobi   = $tamu->lokasi_datang;
 
-        Tamu::where('id_tamu', $id)->update([
-            'survei' => $survei,
-            'jam_keluar' => Carbon::now()
-        ]);
+        foreach ($tamuIds as $id_tamu) {
+            Tamu::where('id_tamu', $id_tamu)->update([
+                'survei' => $request->feedback,
+                'jam_keluar' => Carbon::now()
+            ]);
+        }
 
         return redirect()->route('checkout', ['gedung' => $gedung, 'lobi' => $lobi]);
     }
