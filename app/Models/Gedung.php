@@ -21,6 +21,6 @@ class Gedung   extends Model
     ];
 
     public function area() {
-        return $this->hasMany(Area::class, 'gedung_id');
+        return $this->hasMany(Area::class, 'gedung_id')->orderBy('nama_lantai', 'ASC');
     }
 }

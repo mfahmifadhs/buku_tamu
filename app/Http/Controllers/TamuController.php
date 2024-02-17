@@ -36,9 +36,24 @@ class TamuController extends Controller
 
     public function create($id, $lobi)
     {
-        $gedung = $id == 'adhyatma' ? 1 : 2;
-        $area   = Area::where('gedung_id', $gedung)->orderBy('nama_lantai', 'ASC')->get();
+        if ($id == 'adhyatma' && $lobi == 'lobi-a') {
+            $gedung = 1;
+        } else if ($id == 'adhyatma' && $lobi == 'lobi-c') {
+            $gedung = 2;
+        } else if ($id == 'sujudi' && $lobi == 'lobi') {
+            $gedung = 3;
+        } else {
+            abort(404);
+        }
+
         $instansi = Instansi::orderBy('id_instansi', 'DESC')->get();
+        $dataArea = Area::where('gedung_id', $gedung)->where('status', 'aktif');
+
+        if ($gedung == 3) {
+            $area = $dataArea->orderBy('id_area', 'ASC')->get();
+        } else {
+            $area = $dataArea->orderBy('nama_lantai', 'ASC')->get();
+        }
 
         return view('tamu.create', compact('area', 'id', 'gedung', 'lobi', 'instansi'));
     }
@@ -101,13 +116,13 @@ class TamuController extends Controller
         $query    = Tamu::orderBy('id_tamu', 'DESC')->where(DB::raw("DATE_FORMAT(jam_masuk, '%m')"), $bulan)->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), $tahun);
 
         if (Auth::user()->id == 3) {
-            $tamu = $query->where('lokasi_datang', 'lobi')->get();
+            $tamu = $query->where('lokasi_datang', 'lobi')->paginate(10);
         } elseif (Auth::user()->id == 4) {
-            $tamu = $query->where('lokasi_datang', 'lobi-a')->get();
+            $tamu = $query->where('lokasi_datang', 'lobi-a')->paginate(10);
         }  elseif (Auth::user()->id == 5) {
-            $tamu = $query->where('lokasi_datang', 'lobi-c')->get();
+            $tamu = $query->where('lokasi_datang', 'lobi-c')->paginate(10);
         } else {
-            $tamu = $query->get();
+            $tamu = $query->paginate(10);
         }
 
         return view('dashboard.pages.tamu.show', compact('tanggal', 'bulan', 'tahun', 'tamu', 'gedung', 'area', 'dataArea'));
@@ -151,7 +166,7 @@ class TamuController extends Controller
             $res    = $data;
         }
 
-        $tamu = $res->get();
+        $tamu = $res->paginate(10);
 
         if ($request->downloadFile == 'pdf') {
             return view('dashboard.pages.tamu.pdf', compact('tamu'));
@@ -280,7 +295,16 @@ class TamuController extends Controller
 
     public function formCheckout($gedung, $id)
     {
-        $idGedung = $gedung == 'adhyatma' ? 1 : 2;
+        if ($gedung == 'adhyatma' && $id == 'lobi-a') {
+            $idGedung = 1;
+        } else if ($gedung == 'adhyatma' && $id == 'lobi-c') {
+            $idGedung = 2;
+        } else if ($gedung == 'sujudi' && $id == 'lobi') {
+            $idGedung = 3;
+        } else {
+            abort(404);
+        }
+
         $gedung   = Gedung::where('id_gedung', $idGedung)->first();
 
         return view('checkout', compact('gedung', 'id'));
@@ -293,25 +317,29 @@ class TamuController extends Controller
                 ->where('lokasi_datang', $request->lobi)
                 // ->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y-%m-%d')"), $today)
                 ->where('jam_keluar', null)
-                ->first();
+                ->get();
 
-        if (!$tamu) {
+        if ($tamu->count() == 0) {
             return back()->with('failed', 'Tamu dengan no. visitor '. $request->no_visitor .' tidak ditemukan');
         }
 
         return view('survey', compact('tamu'));
     }
 
-    public function checkoutStore($survei, $id)
+    public function checkoutStore(Request $request, $survei, $id)
     {
-        $tamu = Tamu::where('id_tamu', $id)->first();
+        $tamuIds = explode(',', $request->tamu);
+
+        $tamu   = Tamu::where('id_tamu', $tamuIds)->first();
         $gedung = $tamu->area->gedung_id == 1 ? 'adhyatma' : 'sujudi';
         $lobi   = $tamu->lokasi_datang;
 
-        Tamu::where('id_tamu', $id)->update([
-            'survei' => $survei,
-            'jam_keluar' => Carbon::now()
-        ]);
+        foreach ($tamuIds as $id_tamu) {
+            Tamu::where('id_tamu', $id_tamu)->update([
+                'survei' => $request->feedback,
+                'jam_keluar' => Carbon::now()
+            ]);
+        }
 
         return redirect()->route('checkout', ['gedung' => $gedung, 'lobi' => $lobi]);
     }

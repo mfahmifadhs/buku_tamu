@@ -82,15 +82,10 @@
                             <select name="area_id" class="form-control" required>
                                 <option value="">-- PILIH AREA TUJUAN --</option>
                                 @foreach ($area as $row)
-                                @if ($gedung == 1)
+                                @php $ruang = $row->nama_ruang ? ' ('.$row->nama_ruang.') - ' : ' - '; @endphp
                                 <option value="{{ $row->id_area }}">
-                                    {{ $row->nama_lantai.'  ('.$row->nama_ruang.') - '. $row->nama_sub_bagian }}
+                                    {{ $row->nama_lantai. $ruang. $row->nama_sub_bagian }}
                                 </option>
-                                @else
-                                <option value="{{ $row->id_area }}">
-                                    {{ $row->nama_lantai.' - '.$row->nama_sub_bagian }}
-                                </option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
