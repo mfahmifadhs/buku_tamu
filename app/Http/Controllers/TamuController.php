@@ -93,9 +93,9 @@ class TamuController extends Controller
 
         $fileName = 'file_' . now()->timestamp . '.png';
         $filePath = 'public/foto_tamu/' . $fileName;
-
+	
         Storage::put($filePath, $fileDecoded);
-
+	//dd($fileName);
 
         Tamu::where('id_tamu', $id_tamu)->update([
             'foto_tamu' => $fileName
