@@ -336,8 +336,8 @@
                 datasets: [{
                     data: SurveyTotal,
                     backgroundColor: [
-                        'rgba(60, 179, 1, 0.8)',
                         'rgba(255, 1, 1, 0.8)',
+                        'rgba(60, 179, 1, 0.8)',
                     ]
                 }]
             };
