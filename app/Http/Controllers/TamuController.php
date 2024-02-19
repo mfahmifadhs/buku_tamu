@@ -93,7 +93,7 @@ class TamuController extends Controller
 
         $fileName = 'file_' . now()->timestamp . '.png';
         $filePath = 'public/foto_tamu/' . $fileName;
-	
+
         Storage::put($filePath, $fileDecoded);
 	//dd($fileName);
 
@@ -113,7 +113,7 @@ class TamuController extends Controller
         $dataArea = [];
         $gedung   = '';
         $area     = '';
-	
+
         $query    = Tamu::orderBy('id_tamu', 'DESC')
 		    ->where(DB::raw("DATE_FORMAT(jam_masuk, '%d')"), $tanggal)
 		    ->where(DB::raw("DATE_FORMAT(jam_masuk, '%m')"), $bulan)->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), $tahun);
@@ -201,6 +201,7 @@ class TamuController extends Controller
     public function update(Request $request, $id)
     {
         $jamKeluar = !$request->jam_keluar ? null : Carbon::parse($request->jam_keluar)->format('Y-m-d H:i:s');
+        $tamu = Tamu::where('id_tamu', $id)->first();
         Tamu::where('id_tamu', $id)->update([
             'area_id'        => $request->area_id,
             'jam_masuk'      => $request->jam_masuk,
@@ -213,7 +214,8 @@ class TamuController extends Controller
             'nama_instansi'  => $request->nama_instansi,
             'nama_tujuan'    => $request->nama_tujuan,
             'keperluan'      => $request->keperluan,
-            'nomor_visitor'  => $request->nomor_visitor
+            'nomor_visitor'  => $request->nomor_visitor,
+            'foto_tamu'      => $tamu->foto_tamu
         ]);
 
         return back()->with('success', 'Berhasil Menyimpan Perubahan');
@@ -344,8 +346,21 @@ class TamuController extends Controller
         $tamuIds = explode(',', $request->tamu);
 
         $tamu   = Tamu::where('id_tamu', $tamuIds)->first();
-        $gedung = $tamu->area->gedung_id == 1 ? 'adhyatma' : 'sujudi';
+        $gedung = $tamu->area->gedung_id;
         $lobi   = $tamu->lokasi_datang;
+
+        if ($gedung == 1) {
+            $gedung = 'adhyatma';
+            $lobi   = 'lobi-a';
+        } else if ($gedung == 2) {
+            $gedung = 'adhyatma';
+            $lobi   = 'lobi-c';
+        } else if ($gedung == 3) {
+            $gedung = 'sujudi';
+            $lobi   = 'lobi';
+        } else {
+            abort(404);
+        }
 
         foreach ($tamuIds as $id_tamu) {
             Tamu::where('id_tamu', $id_tamu)->update([
@@ -354,7 +369,7 @@ class TamuController extends Controller
             ]);
         }
 
-        return redirect()->route('checkout', ['gedung' => $gedung, 'lobi' => $lobi]);
+        return redirect()->route('checkout', ['gedung' => $gedung, 'lobi' => $lobi])->with('success', 'Terima kasih');
     }
 
 

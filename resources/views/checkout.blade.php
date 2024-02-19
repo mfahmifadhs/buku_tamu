@@ -23,6 +23,8 @@
             Swal.fire({
                 icon: 'success',
                 title: '{{ Session::get("success") }}',
+                showConfirmButton: false,
+                timer: 1500
             });
         </script>
         @elseif (Session::has('pending'))
@@ -37,6 +39,8 @@
             Swal.fire({
                 icon: 'error',
                 title: '{{ Session::get("failed") }}',
+                showConfirmButton: false,
+                timer: 1500
             });
         </script>
         @endif
