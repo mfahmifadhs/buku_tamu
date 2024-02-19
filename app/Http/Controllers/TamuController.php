@@ -107,22 +107,25 @@ class TamuController extends Controller
 
     public function show()
     {
-        $tanggal  = '';
+        $tanggal  = Carbon::now()->format('d');;
         $bulan    = Carbon::now()->format('m');
         $tahun    = Carbon::now()->format('Y');
         $dataArea = [];
         $gedung   = '';
         $area     = '';
-        $query    = Tamu::orderBy('id_tamu', 'DESC')->where(DB::raw("DATE_FORMAT(jam_masuk, '%m')"), $bulan)->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), $tahun);
+	
+        $query    = Tamu::orderBy('id_tamu', 'DESC')
+		    ->where(DB::raw("DATE_FORMAT(jam_masuk, '%d')"), $tanggal)
+		    ->where(DB::raw("DATE_FORMAT(jam_masuk, '%m')"), $bulan)->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), $tahun);
 
         if (Auth::user()->id == 3) {
-            $tamu = $query->where('lokasi_datang', 'lobi')->paginate(10);
+            $tamu = $query->where('lokasi_datang', 'lobi')->get();
         } elseif (Auth::user()->id == 4) {
-            $tamu = $query->where('lokasi_datang', 'lobi-a')->paginate(10);
+            $tamu = $query->where('lokasi_datang', 'lobi-a')->get();
         }  elseif (Auth::user()->id == 5) {
-            $tamu = $query->where('lokasi_datang', 'lobi-c')->paginate(10);
+            $tamu = $query->where('lokasi_datang', 'lobi-c')->get();
         } else {
-            $tamu = $query->paginate(10);
+            $tamu = $query->get();
         }
 
         return view('dashboard.pages.tamu.show', compact('tanggal', 'bulan', 'tahun', 'tamu', 'gedung', 'area', 'dataArea'));
@@ -166,12 +169,22 @@ class TamuController extends Controller
             $res    = $data;
         }
 
-        $tamu = $res->paginate(10);
+        //$tamu = $res->get();
 
         if ($request->downloadFile == 'pdf') {
             return view('dashboard.pages.tamu.pdf', compact('tamu'));
         } elseif ($request->downloadFile == 'excel') {
             return Excel::download(new TamuExport($request->all()), 'tamu.xlsx');
+        }
+
+        if (Auth::user()->id == 3) {
+            $tamu = $res->where('lokasi_datang', 'lobi')->get();
+        } elseif (Auth::user()->id == 4) {
+            $tamu = $res->where('lokasi_datang', 'lobi-a')->get();
+        }  elseif (Auth::user()->id == 5) {
+            $tamu = $res->where('lokasi_datang', 'lobi-c')->get();
+        } else {
+            $tamu = $res->get();
         }
 
         return view('dashboard.pages.tamu.show', compact('tanggal', 'bulan', 'tahun', 'gedung', 'area', 'dataArea', 'tamu'));
