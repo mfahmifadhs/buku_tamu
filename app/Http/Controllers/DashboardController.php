@@ -31,7 +31,7 @@ class DashboardController extends Controller
 
 
         if ($role == 2) {
-            $query    = Tamu::where('jam_keluar', null)->where('nomor_visitor','!=', null)->orderBy('id_tamu', 'DESC');
+            $query    = Tamu::where('jam_keluar', null)->orderBy('id_tamu', 'DESC');
             $name     = 'Admin';
             $position = 'Receptionist';
 
@@ -40,7 +40,7 @@ class DashboardController extends Controller
             } elseif (Auth::user()->id == 4) {
                 $tamu = $query->where('lokasi_datang', 'lobi-a')->get();
             }  elseif (Auth::user()->id == 5) {
-                $tamu = $query->where('lokasi_datang', 'lobi-c')->get();
+                $tamu = $query->whereIn('lokasi_datang', ['lobi-c', '2c'])->get();
             }
 
         } else {

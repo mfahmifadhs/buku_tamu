@@ -53,44 +53,72 @@
     </div>
 </section> -->
 
-<section class="content border border-white" style="margin-top: 30vh;">
-    <div class="mb-3">
-        <img src="{{ asset('dist/img/logo-kemenkes.png') }}" alt="kemenkes" class="w-25 mt-3 mx-auto">
-    </div>
-    <div class="container-fluid d-flex justify-content-center align-items-center mb-3">
-        <div class="row text-white">
-            <div class="form-group" style="font-size: 16px;">
-                <label class="col-md-2 col-2">Kode</label>
-                <label class="col-md-8 col-8">: {{ $tamu->id_tamu }}</label>
-            </div>
-            <div class="form-group">
-                <label class="col-md-2 col-2">Tanggal</label>
-                <label class="col-md-8 col-8">: {{ Carbon\Carbon::parse($tamu->tanggal_datang)->isoFormat('DD MMMM Y') }}</label>
-            </div>
-            <div class="form-group">
-                <label class="col-md-2 col-2">Jam</label>
-                <label class="col-md-8 col-8">: {{ Carbon\Carbon::parse($tamu->jam_masuk)->isoFormat('HH:mm:ss') }}</label>
-            </div>
-            <div class="form-group">
-                <label class="col-md-2 col-2">Nama</label>
-                <label class="col-md-8 col-8">: {{ $tamu->nama_tamu }}</label>
+@if (!$success)
+<div class="container d-flex align-items-center justify-content-center vh-100">
+    <div class="col-md-6 col-12 text-white border border-white">
+        <div class="mb-3">
+            <img src="{{ asset('dist/img/logo-kemenkes.png') }}" alt="kemenkes" class="w-25 mt-3 mx-auto">
+        </div>
+        <div class="container-fluid d-flex justify-content-center align-items-center mb-3">
+            <div class="row text-white">
+                <div class="form-group" style="font-size: 16px;">
+                    <label class="col-md-2 col-2">Kode</label>
+                    <label class="col-md-8 col-8">: {{ $tamu->id_tamu }}</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 col-2">Tanggal</label>
+                    <label class="col-md-8 col-8">: {{ Carbon\Carbon::parse($tamu->tanggal_datang)->isoFormat('DD MMMM Y') }}</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 col-2">Jam</label>
+                    <label class="col-md-8 col-8">: {{ Carbon\Carbon::parse($tamu->jam_masuk)->isoFormat('HH:mm:ss') }}</label>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 col-2">Nama</label>
+                    <label class="col-md-8 col-8">: {{ $tamu->nama_tamu }}</label>
+                </div>
             </div>
         </div>
+        <div class="col-md-12 mx-auto">
+            <form id="form" action="{{ route('tamu.no_visitor', ['gedung' => $gedung, 'lobi' => $lobi, 'id' => $id ]) }}" method="POST">
+                @csrf
+                <div class="card-header">
+                    <input type="number" class="form-control number text-center number form-control-lg" name="no_visitor" placeholder="Nomor Visitor" required>
+                </div>
+                <div class="card-header text-center">
+                    <button type="submit" class="btn btn-info border-white text-white" onclick="return confirm('Apakah nomor visitor sudah sesuai ?')">
+                        <i class="fas fa-paper-plane"></i> <b>KIRIM</b>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="col-md-6 mx-auto">
-        <form id="form" action="{{ route('tamu.no_visitor', ['gedung' => $gedung, 'lobi' => $lobi, 'id' => $id ]) }}" method="POST">
-            @csrf
-            <div class="card-header">
-                <input type="number" class="form-control number text-center number form-control-lg" name="no_visitor" placeholder="Nomor Visitor" required>
-            </div>
-            <div class="card-header text-center">
-                <button type="submit" class="btn btn-default border-white text-white" onclick="return confirm('Apakah nomor visitor sudah sesuai ?')">
-                    <i class="fas fa-paper-plane"></i> <b>KIRIM</b>
-                </button>
-            </div>
-        </form>
+</div>
+@endif
+
+
+@if ($success)
+<div class="container d-flex align-items-center justify-content-center vh-100">
+    <div class="card col-md-5 col-12 text-center text-white bg-transparent">
+        <div class="card-body">
+            <i class="fas fa-check-circle text-success fa-10x"></i>
+            <p class="my-2">Data berhasil terimpan</p>
+            <p class="fa-3x"><b>SELAMAT DATANG</b></p>
+            <p>
+                {{ $tamu->jam_masuk }} | No. Visitor {{ $tamu->nomor_visitor }}
+            </p>
+            <p>
+                {{ $tamu->nama_tamu }} - {{ $tamu->nama_instansi }}
+            </p>
+            <p>
+                {{ $tamu->area->gedung->nama_gedung }} - {{ $tamu->area->nama_lantai }} <br>
+                {{ $tamu->area->nama_sub_bagian }}
+            </p>
+        </div>
     </div>
-</section>
+</div>
+
+@endif
 
 @section('js')
 <script>
@@ -121,6 +149,15 @@
                 cancelButtonText: 'Batal',
             }).then((result) => {
                 if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Mengirim...",
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        },
+                    })
                     form.submit();
                 }
             });

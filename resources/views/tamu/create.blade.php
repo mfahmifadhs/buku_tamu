@@ -157,6 +157,15 @@
                 cancelButtonText: 'Batal',
             }).then((result) => {
                 if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "Mengirim...",
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        },
+                    })
                     form.submit();
                 }
             });

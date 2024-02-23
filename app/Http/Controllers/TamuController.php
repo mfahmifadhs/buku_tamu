@@ -23,14 +23,27 @@ class TamuController extends Controller
 
     public function confirm(Request $request, $gedung, $lobi, $id)
     {
-        if (!$request->no_visitor) {
-            $tamu = Tamu::where('id_tamu', $id)->first();
-            return view('tamu.confirm', compact('gedung', 'id', 'lobi', 'tamu'));
+        $success = $request->get('success', null);
+        if (!$request->no_visitor && $lobi != '2c') {
+            $tamu    = Tamu::where('id_tamu', $id)->first();
+            return view('tamu.confirm', compact('gedung', 'id', 'lobi', 'tamu', 'success'));
+        } else if ($lobi == '2c') {
+            $success = 'true';
+
+            Tamu::where('id_tamu', $id)->update([
+                'nomor_visitor' => 0
+            ]);
+
+            $tamu    = Tamu::where('id_tamu', $id)->first();
+            return view('tamu.confirm', compact('gedung', 'id', 'lobi', 'tamu', 'success'));
+
         } else {
+            $success = 'true';
             Tamu::where('id_tamu', $id)->update([
                 'nomor_visitor' => $request->no_visitor
             ]);
-            return redirect()->route('tamu.create', ['gedung' => $gedung, 'lobi' => $lobi])->with('success', 'Selamat Datang!');
+            $tamu    = Tamu::where('id_tamu', $id)->first();
+            return view('tamu.confirm', compact('gedung', 'id', 'lobi', 'tamu', 'success'))->with('success', 'Selamat Datang!');
         }
     }
 
@@ -40,6 +53,8 @@ class TamuController extends Controller
             $gedung = 1;
         } else if ($id == 'adhyatma' && $lobi == 'lobi-c') {
             $gedung = 2;
+        } else if ($id == 'adhyatma' && $lobi == '2c') {
+            $gedung = 2;
         } else if ($id == 'sujudi' && $lobi == 'lobi') {
             $gedung = 3;
         } else {
@@ -47,13 +62,21 @@ class TamuController extends Controller
         }
 
         $instansi = Instansi::orderBy('id_instansi', 'DESC')->get();
-        $dataArea = Area::where('gedung_id', $gedung)->where('status', 'aktif');
+
+        if ($lobi == '2c') {
+            $dataArea = Area::where('gedung_id', '!=', 3)->where('status', 'aktif')
+                        ->where('nama_lantai', 'like', '%lantai 2%');
+
+        } else {
+            $dataArea = Area::where('gedung_id', $gedung)->where('status', 'aktif');
+        }
 
         if ($gedung == 3) {
             $area = $dataArea->orderBy('id_area', 'ASC')->get();
         } else {
             $area = $dataArea->orderBy('nama_lantai', 'ASC')->get();
         }
+
 
         return view('tamu.create', compact('area', 'id', 'gedung', 'lobi', 'instansi'));
     }
@@ -95,7 +118,7 @@ class TamuController extends Controller
         $filePath = 'public/foto_tamu/' . $fileName;
 
         Storage::put($filePath, $fileDecoded);
-	//dd($fileName);
+	    //dd($fileName);
 
         Tamu::where('id_tamu', $id_tamu)->update([
             'foto_tamu' => $fileName
@@ -123,7 +146,7 @@ class TamuController extends Controller
         } elseif (Auth::user()->id == 4) {
             $tamu = $query->where('lokasi_datang', 'lobi-a')->get();
         }  elseif (Auth::user()->id == 5) {
-            $tamu = $query->where('lokasi_datang', 'lobi-c')->get();
+            $tamu = $query->whereIn('lokasi_datang', ['lobi-c', '2c'])->get();
         } else {
             $tamu = $query->get();
         }
@@ -182,7 +205,7 @@ class TamuController extends Controller
         } elseif (Auth::user()->id == 4) {
             $tamu = $res->where('lokasi_datang', 'lobi-a')->get();
         }  elseif (Auth::user()->id == 5) {
-            $tamu = $res->where('lokasi_datang', 'lobi-c')->get();
+            $tamu = $res->whereIn('lokasi_datang', ['lobi-c', '2c'])->get();
         } else {
             $tamu = $res->get();
         }

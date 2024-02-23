@@ -139,7 +139,7 @@
                                         @endif
                                     </td>
                                     <td class="text-left">
-                                        @php $lokasi = $row->lokasi_datang == 'lobi-a' ? 'Lobi A, Adhyatma' : ($row->lokasi_datang == 'lobi-c' ? 'Lobi C, Adhyatma' : 'Lobi Sujudi'); @endphp
+                                        @php $lokasi = $row->lokasi_datang == 'lobi-a' ? 'Lobi A, Adhyatma' : ($row->lokasi_datang == 'lobi-c' ? 'Lobi C, Adhyatma' : ($row->lokasi_datang == '2c' ? '2C, Adhyatma' : 'Lobi Sujudi')); @endphp
                                         <i class="fas fa-building"></i> &ensp;: {{ $lokasi }} <br>
                                         <i class="fas fa-person-walking-arrow-right"></i> : {{ $row->jam_masuk }} <br>
                                         <i class="fas fa-person-walking-arrow-loop-left"></i> : {{ $row->jam_keluar }} <br>
