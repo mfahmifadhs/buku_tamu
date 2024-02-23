@@ -103,7 +103,7 @@
         <div class="card-body">
             <i class="fas fa-check-circle text-success fa-10x"></i>
             <p class="my-2">Data berhasil terimpan</p>
-            <p class="fa-3x"><b>SELAMAT DATANG</b></p>
+            <p class="fa-2x"><b>SELAMAT DATANG</b></p>
             <p>
                 {{ $tamu->jam_masuk }} | No. Visitor {{ $tamu->nomor_visitor }}
             </p>
