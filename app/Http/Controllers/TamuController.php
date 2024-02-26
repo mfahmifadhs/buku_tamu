@@ -83,7 +83,7 @@ class TamuController extends Controller
 
     public function store(Request $request, $id)
     {
-        // dd($request->all());
+        //dd($request->all());
         if ($request->test != 'true') {
             if (!$request->input('capturedImage')) {
                 return back()->with('failed', 'Anda belum mengambil gambar');
@@ -128,7 +128,7 @@ class TamuController extends Controller
             $fullFileName = $foto->getClientOriginalName();
             $foto_name    = pathinfo($fullFileName)['filename'];
             $extension    = $foto->getClientOriginalExtension();
-            $fileName     = $foto_name . '_' . now()->timestamp . '.' . $extension;
+            $fileName     = 'file_' . now()->timestamp . '.' . $extension;
             $foto->storeAs('public/foto_tamu', $fileName);
         }
 
