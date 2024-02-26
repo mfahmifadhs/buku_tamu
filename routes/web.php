@@ -36,6 +36,7 @@ Route::get('keluar', [AuthController::class, 'keluar'])->name('keluar');
 Route::post('login', [AuthController::class, 'postLogin'])->name('post.login');
 
 Route::get('captcha-reload', [AuthController::class, 'reloadCaptcha']);
+Route::get('test/form/{gedung}/{lobi}', [TamuController::class, 'testCreate'])->name('tamu.create.test');
 Route::get('form/{gedung}/{lobi}', [TamuController::class, 'create'])->name('tamu.create');
 Route::get('form/berhasil/{gedung}/{lobi}/{id}', [TamuController::class, 'confirm'])->name('tamu.confirm');
 

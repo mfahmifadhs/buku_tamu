@@ -83,8 +83,11 @@ class TamuController extends Controller
 
     public function store(Request $request, $id)
     {
-        if (!$request->input('capturedImage')) {
-            return back()->with('failed', 'Anda belum mengambil gambar');
+        // dd($request->all());
+        if ($request->test != 'true') {
+            if (!$request->input('capturedImage')) {
+                return back()->with('failed', 'Anda belum mengambil gambar');
+            };
         }
 
         $total   = str_pad(Tamu::withTrashed()->count() + 1, 4, 0, STR_PAD_LEFT);
@@ -107,18 +110,27 @@ class TamuController extends Controller
         $tambah->created_at     = Carbon::now();
         $tambah->save();
 
+        if ($request->test != 'true') {
 
-        $filePict64 = $request->input('capturedImage');
+            $filePict64 = $request->input('capturedImage');
 
-        list($type, $filePict64) = explode(';', $filePict64);
-        list(, $filePict64) = explode(',', $filePict64);
-        $fileDecoded = base64_decode($filePict64);
+            list($type, $filePict64) = explode(';', $filePict64);
+            list(, $filePict64) = explode(',', $filePict64);
+            $fileDecoded = base64_decode($filePict64);
 
-        $fileName = 'file_' . now()->timestamp . '.png';
-        $filePath = 'public/foto_tamu/' . $fileName;
+            $fileName = 'file_' . now()->timestamp . '.png';
+            $filePath = 'public/foto_tamu/' . $fileName;
 
-        Storage::put($filePath, $fileDecoded);
-	    //dd($fileName);
+            Storage::put($filePath, $fileDecoded);
+            //dd($fileName);
+        } else {
+            $foto         = $request->file('capturedImage');
+            $fullFileName = $foto->getClientOriginalName();
+            $foto_name    = pathinfo($fullFileName)['filename'];
+            $extension    = $foto->getClientOriginalExtension();
+            $fileName     = $foto_name . '_' . now()->timestamp . '.' . $extension;
+            $foto->storeAs('public/foto_tamu', $fileName);
+        }
 
         Tamu::where('id_tamu', $id_tamu)->update([
             'foto_tamu' => $fileName
@@ -404,5 +416,39 @@ class TamuController extends Controller
                 ->get();
 
         return response()->json($result);
+    }
+
+    public function testCreate($id, $lobi)
+    {
+        if ($id == 'adhyatma' && $lobi == 'lobi-a') {
+            $gedung = 1;
+        } else if ($id == 'adhyatma' && $lobi == 'lobi-c') {
+            $gedung = 2;
+        } else if ($id == 'adhyatma' && $lobi == '2c') {
+            $gedung = 2;
+        } else if ($id == 'sujudi' && $lobi == 'lobi') {
+            $gedung = 3;
+        } else {
+            abort(404);
+        }
+
+        $instansi = Instansi::orderBy('id_instansi', 'DESC')->get();
+
+        if ($lobi == '2c') {
+            $dataArea = Area::where('gedung_id', '!=', 3)->where('status', 'aktif')
+                        ->where('nama_lantai', 'like', '%lantai 2%');
+
+        } else {
+            $dataArea = Area::where('gedung_id', $gedung)->where('status', 'aktif');
+        }
+
+        if ($gedung == 3) {
+            $area = $dataArea->orderBy('id_area', 'ASC')->get();
+        } else {
+            $area = $dataArea->orderBy('nama_lantai', 'ASC')->get();
+        }
+
+
+        return view('tamu.test-create', compact('area', 'id', 'gedung', 'lobi', 'instansi'));
     }
 }
