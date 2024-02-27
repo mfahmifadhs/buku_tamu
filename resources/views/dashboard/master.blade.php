@@ -104,7 +104,7 @@
                                             <canvas id="dayChart" style="height: 320px;"></canvas>
                                         </div>
                                     </div>
-                                    <div class="card-header">
+                                    <div class="card-header table-responsive">
                                         <label>Rekap Harian Tamu</label>
                                         <table id="table-day" class="table table-striped text-sm text-center">
                                             <thead>
@@ -117,7 +117,7 @@
                                             <tbody id="table-body"></tbody>
                                         </table>
                                     </div>
-                                    <div class="card-header">
+                                    <div class="card-header table-responsive">
                                         <label>Rekap Harian Tamu/Gedung</label>
                                         <table id="table-gedung" class="table table-striped text-sm text-center">
                                             <thead>
@@ -132,7 +132,7 @@
                                             <tbody id="table-body"></tbody>
                                         </table>
                                     </div>
-                                    <div class="card-header">
+                                    <div class="card-header table-responsive">
                                         <label>Rekap Harian Tamu/Instansi</label>
                                         <table id="table-instansi" class="table table-striped text-sm text-center">
                                             <thead>
