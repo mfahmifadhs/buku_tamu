@@ -302,7 +302,7 @@
     $(document).ready(function() {
         $.get(dayUrl, function(result) {
             result.forEach(function(data) {
-                Day.push(data.month);
+                Day.push(data.date);
                 DayTotalVisit.push(data.total_tamu);
             });
 
