@@ -105,12 +105,46 @@
                                         </div>
                                     </div>
                                     <div class="card-header">
+                                        <label>Rekap Harian Tamu</label>
                                         <table id="table-day" class="table table-striped text-sm text-center">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
                                                     <th>Tanggal</th>
                                                     <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="table-body"></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="card-header">
+                                        <label>Rekap Harian Tamu/Gedung</label>
+                                        <table id="table-gedung" class="table table-striped text-sm text-center">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Tanggal</th>
+                                                    <th>Gd. Sujudi</th>
+                                                    <th>Gd. Adhyatma - Lobi A</th>
+                                                    <th>Gd. Adhyatma - Lobi C</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="table-body"></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="card-header">
+                                        <label>Rekap Harian Tamu/Instansi</label>
+                                        <table id="table-instansi" class="table table-striped text-sm text-center">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Tanggal</th>
+                                                    <th>Hotel</th>
+                                                    <th>KL Pusat</th>
+                                                    <th>KL Daerah</th>
+                                                    <th>Oranisasi Non-Pemerintah/LSM</th>
+                                                    <th>Pribadi</th>
+                                                    <th>Lainnya</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="table-body"></tbody>
@@ -310,9 +344,37 @@
             })
 
             var table = $('#table-day').DataTable();
-
             result.forEach(function(data, index) {
-                table.row.add([index + 1, data.month, data.total_tamu]).draw();
+                table.row.add([
+                    index + 1,
+                    data.date,
+                    data.total_tamu
+                ]).draw();
+            });
+
+            var tInstansi = $('#table-gedung').DataTable();
+            result.forEach(function(data, index) {
+                tInstansi.row.add([
+                    index + 1,
+                    data.date,
+                    data.gd_sujudi,
+                    data.gd_adhyatma_lobi_a,
+                    data.gd_adhyatma_lobi_c
+                ]).draw();
+            });
+
+            var tInstansi = $('#table-instansi').DataTable();
+            result.forEach(function(data, index) {
+                tInstansi.row.add([
+                    index + 1,
+                    data.date,
+                    data.hotel,
+                    data.kl_pusat,
+                    data.kl_daerah,
+                    data.lsm,
+                    data.pribadi,
+                    data.lainnya
+                ]).draw();
             });
         });
     });
@@ -336,8 +398,8 @@
                 datasets: [{
                     data: SurveyTotal,
                     backgroundColor: [
-                        'rgba(255, 1, 1, 0.8)',
                         'rgba(60, 179, 1, 0.8)',
+                        'rgba(255, 1, 1, 0.8)',
                     ]
                 }]
             };

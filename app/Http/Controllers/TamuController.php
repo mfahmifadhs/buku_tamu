@@ -333,10 +333,22 @@ class TamuController extends Controller
         } else if ($id == 'hari') {
             $dataBulan = $bulan ? $bulan : Carbon::now()->format('m');
             $dataTahun = $tahun ? $tahun : Carbon::now()->format('Y');
-            $result = Tamu::select(DB::raw("(DATE_FORMAT(jam_masuk, '%d/%m/%y')) as month"), DB::raw("count(id_tamu) as total_tamu "))
-                ->groupBy('month')
-                ->where(DB::raw("DATE_FORMAT(jam_masuk, '%m')"), $dataBulan)
-                ->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), $tahun)
+            $result = Tamu::select(
+                DB::raw("DATE_FORMAT(jam_masuk, '%d/%m/%y') as date"),
+                DB::raw("COUNT(id_tamu) as total_tamu"),
+                DB::raw("SUM(IF(lokasi_datang = 'lobi', 1, 0)) as gd_sujudi"),
+                DB::raw("SUM(IF(lokasi_datang = 'lobi-a', 1, 0)) as gd_adhyatma_lobi_a"),
+                DB::raw("SUM(IF(lokasi_datang = 'lobi-c', 1, 0)) as gd_adhyatma_lobi_c"),
+                DB::raw("SUM(IF(instansi_id   = '1', 1, 0)) as hotel"),
+                DB::raw("SUM(IF(instansi_id   = '2', 1, 0)) as kl_pusat"),
+                DB::raw("SUM(IF(instansi_id   = '3', 1, 0)) as kl_daerah"),
+                DB::raw("SUM(IF(instansi_id   = '4', 1, 0)) as lsm"),
+                DB::raw("SUM(IF(instansi_id   = '5', 1, 0)) as pribadi"),
+                DB::raw("SUM(IF(instansi_id   = '0', 1, 0)) as lainnya"),
+            )
+                ->whereMonth('jam_masuk', $dataBulan)
+                ->whereYear('jam_masuk', $dataTahun)
+                ->groupBy('date')
                 ->get();
         }
 
