@@ -349,6 +349,7 @@ class TamuController extends Controller
                 ->whereMonth('jam_masuk', $dataBulan)
                 ->whereYear('jam_masuk', $dataTahun)
                 ->groupBy('date')
+                ->orderBy('date', 'DESC')
                 ->get();
         }
 
