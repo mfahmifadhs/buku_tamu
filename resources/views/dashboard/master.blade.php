@@ -172,7 +172,7 @@
                                                 <div class="col-md-12">
                                                     <label><i class="fas fa-users"></i> Total Tamu per-Instansi</label>
                                                     <form action="">
-                                                        <table class="table">
+                                                        <table class="table"  style="font-size: 13px;">
                                                             @foreach ($totalInstansi as $row)
                                                             <tr>
                                                                 <td>
@@ -180,7 +180,7 @@
                                                                         {{ !$row->instansi ? 'Lainnya' : $row->instansi->instansi }}
                                                                     </button>
                                                                 </td>
-                                                                <td class="text-right">{{ $row->total }} tamu</td>
+                                                                <td class="text-right">1102 tamu</td>
                                                             </tr>
                                                             @endforeach
                                                         </table>
