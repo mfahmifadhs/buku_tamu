@@ -172,7 +172,7 @@
                                                 <div class="col-md-12">
                                                     <label><i class="fas fa-users"></i> Total Tamu per-Instansi</label>
                                                     <form action="">
-                                                        <table class="table"  style="font-size: 13px;">
+                                                        <table class="table" style="font-size: 13px;">
                                                             @foreach ($totalInstansi as $row)
                                                             <tr>
                                                                 <td>
@@ -180,7 +180,7 @@
                                                                         {{ !$row->instansi ? 'Lainnya' : $row->instansi->instansi }}
                                                                     </button>
                                                                 </td>
-                                                                <td class="text-right">1102 tamu</td>
+                                                                <td class="text-right">{{ $row->total }} tamu</td>
                                                             </tr>
                                                             @endforeach
                                                         </table>
@@ -196,7 +196,7 @@
                                             <div class="row text-sm">
                                                 <div class="col-md-12">
                                                     <label><i class="fas fa-building"></i> Total Tamu per-Lobi</label>
-                                                    <table class="table">
+                                                    <table class="table" style="font-size: 13px;">
                                                         @foreach ($totalLobi as $row)
                                                         <tr>
                                                             <td>{{ $row->lokasi_datang == 'lobi'? 'Gedung Sujudi' : 'Gedung Adhyatma, '. ucwords($row->lokasi_datang) }}</td>
