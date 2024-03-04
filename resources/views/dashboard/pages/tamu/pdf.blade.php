@@ -101,6 +101,10 @@
                                 <div class="col-7">: {{ $row->nama_instansi }}</div>
                                 <div class="col-4">No. Visitor</div>
                                 <div class="col-7">: {{ $row->nomor_visitor }}</div>
+                                <div class="col-4 mt-4">Foto Tamu</div>
+                                <div class="col-7 align-top">:
+                                    <img src="{{ asset('storage/foto_tamu/' . $row->foto_tamu) }}" class="w-50" alt="">
+                                </div>
                             </div>
                         </td>
 

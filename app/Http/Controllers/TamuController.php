@@ -204,13 +204,7 @@ class TamuController extends Controller
             $res    = $data;
         }
 
-        //$tamu = $res->get();
-
-        if ($request->downloadFile == 'pdf') {
-            return view('dashboard.pages.tamu.pdf', compact('tamu'));
-        } elseif ($request->downloadFile == 'excel') {
-            return Excel::download(new TamuExport($request->all()), 'tamu.xlsx');
-        }
+        // $tamu = $res->get();
 
         if (Auth::user()->id == 3) {
             $tamu = $res->where('lokasi_datang', 'lobi')->get();
@@ -220,6 +214,12 @@ class TamuController extends Controller
             $tamu = $res->whereIn('lokasi_datang', ['lobi-c', '2c'])->get();
         } else {
             $tamu = $res->get();
+        }
+
+        if ($request->downloadFile == 'pdf') {
+            return view('dashboard.pages.tamu.pdf', compact('tamu'));
+        } elseif ($request->downloadFile == 'excel') {
+            return Excel::download(new TamuExport($request->all()), 'tamu.xlsx');
         }
 
         return view('dashboard.pages.tamu.show', compact('tanggal', 'bulan', 'tahun', 'gedung', 'area', 'dataArea', 'tamu'));
