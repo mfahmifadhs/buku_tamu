@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithDrawings;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 
-class TamuExport implements FromCollection, WithHeadings, WithDrawings
+class TamuExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $request;
     protected $no = 0;
@@ -74,57 +74,57 @@ class TamuExport implements FromCollection, WithHeadings, WithDrawings
         return $tamu;
     }
 
-    public function drawings()
+    
+
+    public function map($tamu): array
     {
-        $drawings = [];
-        $tamu = $this->collection();
-
-        foreach ($tamu as $index => $image) {
-            // Periksa apakah nilai foto_tamu null atau tidak
-            if ($image->foto_tamu) {
-                $imagePath = public_path('storage/foto_tamu/' . $image->foto_tamu);
-
-                $drawing = new Drawing();
-                $drawing->setName('Image' . $index)
-                    ->setDescription($image->foto_tamu)
-                    ->setPath($imagePath)
-                    ->setHeight(60)
-                    ->setWidth(60)
-                    // ->setOffsetX(12)
-                    // ->setOffsetY(12)
-                    ->setCoordinates('P' . ($index + 2));
-
-                $drawings[] = $drawing;
-            }
-        }
-
-        return $drawings;
+        return [
+            ++$this->no,
+            $tamu->id_tamus,
+            $tamu->jam_masuk,
+            $tamu->jam_keluar,
+            $tamu->nama_tamu,
+            $tamu->nomor_visitor,
+            $tamu->nik_nip,
+            $tamu->alamat_tamu,
+            $tamu->no_telpon,
+            $tamu->nama_instansi,
+            $tamu->nama_tujuan,
+            $tamu->keperluan,
+            $tamu->nama_gedung,
+            $tamu->nama_lantai,
+            $tamu->nama_sub_bagian,
+            '=IMAGE("https://buku-tamu.kemkes.go.id/storage/foto_tamu/'. $tamu->foto_tamu .'", 4, 100, 100)'
+        ];
     }
 
-    // public function map($tamu): array
+
+    // public function drawings()
     // {
-    //     $gambarPath = public_path('storage/foto_tamu/' . $tamu->foto_tamu);
+    //     $drawings = [];
+    //     $tamu = $this->collection();
 
-    //     return [
-    //         ++$this->no,
-    //         $tamu->id_tamus,
-    //         $tamu->jam_masuk,
-    //         $tamu->jam_keluar,
-    //         $tamu->nama_tamu,
-    //         $tamu->nomor_visitor,
-    //         $tamu->nik_nip,
-    //         $tamu->alamat_tamu,
-    //         $tamu->no_telpon,
-    //         $tamu->nama_instansi,
-    //         $tamu->nama_tujuan,
-    //         $tamu->keperluan,
-    //         $tamu->nama_gedung,
-    //         $tamu->nama_lantai,
-    //         $tamu->nama_sub_bagian,
-    //         $gambarPath
-    //     ];
+    //     foreach ($tamu as $index => $image) {
+    //         // Periksa apakah nilai foto_tamu null atau tidak
+    //         if ($image->foto_tamu) {
+    //             $imagePath = public_path('storage/foto_tamu/' . $image->foto_tamu);
+
+    //             $drawing = new Drawing();
+    //             $drawing->setName('Image' . $index)
+    //                 ->setDescription($image->foto_tamu)
+    //                 ->setPath($imagePath)
+    //                 ->setHeight(60)
+    //                 ->setWidth(60)
+    //                 // ->setOffsetX(12)
+    //                 // ->setOffsetY(12)
+    //                 ->setCoordinates('P' . ($index + 2));
+
+    //             $drawings[] = $drawing;
+    //         }
+    //     }
+
+    //     return $drawings;
     // }
-
     public function headings(): array
     {
         return [
