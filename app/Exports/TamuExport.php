@@ -33,12 +33,12 @@ class TamuExport implements FromCollection, WithHeadings, WithMapping
             ->join('t_gedung', 'id_gedung', 'gedung_id')
             ->select(
                 DB::raw('ROW_NUMBER() OVER (ORDER BY id_tamu) as no'),
-                DB::raw('CONCAT("`", id_tamu)'),
+                'id_tamu',
                 'jam_masuk',
                 'jam_keluar',
                 'nama_tamu',
                 'nomor_visitor',
-                DB::raw('CONCAT("`", nik_nip)'),
+                'nik_nip',
                 'alamat_tamu',
                 'no_telpon',
                 'nama_instansi',
@@ -80,12 +80,12 @@ class TamuExport implements FromCollection, WithHeadings, WithMapping
     {
         return [
             ++$this->no,
-            $tamu->id_tamus,
+            '`' . $tamu->id_tamu,
             $tamu->jam_masuk,
             $tamu->jam_keluar,
             $tamu->nama_tamu,
             $tamu->nomor_visitor,
-            $tamu->nik_nip,
+            '`' . $tamu->nik_nip,
             $tamu->alamat_tamu,
             $tamu->no_telpon,
             $tamu->nama_instansi,
