@@ -65,7 +65,8 @@ class TamuController extends Controller
 
         if ($lobi == '2c') {
             $dataArea = Area::where('gedung_id', '!=', 3)->where('status', 'aktif')
-                        ->where('nama_lantai', 'like', '%lantai 2%');
+                        ->where('nama_lantai', 'like', '%lantai 2%')
+                        ->orderBy('id_area', 'ASC');
 
         } else {
             $dataArea = Area::where('gedung_id', $gedung)->where('status', 'aktif');
@@ -142,7 +143,7 @@ class TamuController extends Controller
 
     public function show()
     {
-        $tanggal  = Carbon::now()->format('d');;
+        $tanggal  = Carbon::now()->format('d');
         $bulan    = Carbon::now()->format('m');
         $tahun    = Carbon::now()->format('Y');
         $dataArea = [];
