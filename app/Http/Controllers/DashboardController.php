@@ -26,8 +26,12 @@ class DashboardController extends Controller
         $tahun = $request->get('tahun', Carbon::now()->format('Y'));
         $bulan = $request->get('bulan', Carbon::now()->format('m'));
         $tahunBulan = $request->get('tahunBulan', Carbon::now()->format('Y'));
-        $totalInstansi = Tamu::select('instansi_id', DB::raw('COUNT(id_tamu) as total'))->groupBy('instansi_id')->get();
-        $totalLobi     = Tamu::select('lokasi_datang', DB::raw('COUNT(id_tamu) as total'))->groupBy('lokasi_datang')->get();
+        $totalInstansi = Tamu::select('instansi_id', DB::raw('COUNT(id_tamu) as total'))->groupBy('instansi_id')
+            ->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), Carbon::now()->format('Y'))
+            ->get();
+        $totalLobi     = Tamu::select('lokasi_datang', DB::raw('COUNT(id_tamu) as total'))->groupBy('lokasi_datang')
+            ->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), Carbon::now()->format('Y'))
+            ->get();
 
 
         if ($role == 2) {
@@ -39,10 +43,9 @@ class DashboardController extends Controller
                 $tamu = $query->where('lokasi_datang', 'lobi')->get();
             } elseif (Auth::user()->id == 4) {
                 $tamu = $query->where('lokasi_datang', 'lobi-a')->get();
-            }  elseif (Auth::user()->id == 5) {
+            } elseif (Auth::user()->id == 5) {
                 $tamu = $query->whereIn('lokasi_datang', ['lobi-c', '2c'])->get();
             }
-
         } else {
             $tamu     = Tamu::select(DB::raw("DATE_FORMAT(jam_masuk, '%m') as bulan"), DB::raw("DATE_FORMAT(jam_masuk, '%Y') as tahun"), 'id_tamu')->get();
             $name     = Auth::user()->role->role;
@@ -50,7 +53,6 @@ class DashboardController extends Controller
         }
 
         return view('dashboard.' . $user, compact('name', 'position', 'tamu', 'bulan', 'tahun', 'tahunBulan', 'totalInstansi', 'totalLobi'));
-
     }
 
     public function time()

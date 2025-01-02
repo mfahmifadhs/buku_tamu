@@ -36,7 +36,6 @@ class TamuController extends Controller
 
             $tamu    = Tamu::where('id_tamu', $id)->first();
             return view('tamu.confirm', compact('gedung', 'id', 'lobi', 'tamu', 'success'));
-
         } else {
             $success = 'true';
             Tamu::where('id_tamu', $id)->update([
@@ -65,9 +64,8 @@ class TamuController extends Controller
 
         if ($lobi == '2c') {
             $dataArea = Area::where('gedung_id', '!=', 3)->where('status', 'aktif')
-                        ->where('nama_lantai', 'like', '%lantai 2%')
-                        ->orderBy('id_area', 'ASC');
-
+                ->where('nama_lantai', 'like', '%lantai 2%')
+                ->orderBy('id_area', 'ASC');
         } else {
             $dataArea = Area::where('gedung_id', $gedung)->where('status', 'aktif');
         }
@@ -141,30 +139,32 @@ class TamuController extends Controller
         return redirect()->route('tamu.confirm', ['gedung' => $id, 'lobi' => $lobi, 'id' => $id_tamu])->with('success', 'Berhasil Mengisi Form');
     }
 
-    public function show()
+    public function show(Request $request)
     {
-        $tanggal  = Carbon::now()->format('d');
-        $bulan    = Carbon::now()->format('m');
-        $tahun    = Carbon::now()->format('Y');
+        $tanggal  = $request->get('tanggal');
+        $bulan    = $request->get('bulan');
+        $tahun    = $request->get('tahun');
+        $area     = $request->get('area');
+        $instansi = $request->get('instansi');
         $dataArea = [];
         $gedung   = '';
         $area     = '';
 
         $query    = Tamu::orderBy('id_tamu', 'DESC')
-		    ->where(DB::raw("DATE_FORMAT(jam_masuk, '%d')"), $tanggal)
-		    ->where(DB::raw("DATE_FORMAT(jam_masuk, '%m')"), $bulan)->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), $tahun);
+            ->where(DB::raw("DATE_FORMAT(jam_masuk, '%d')"), $tanggal)
+            ->where(DB::raw("DATE_FORMAT(jam_masuk, '%m')"), $bulan)->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), $tahun);
 
         if (Auth::user()->id == 3) {
             $tamu = $query->where('lokasi_datang', 'lobi')->get();
         } elseif (Auth::user()->id == 4) {
             $tamu = $query->where('lokasi_datang', 'lobi-a')->get();
-        }  elseif (Auth::user()->id == 5) {
+        } elseif (Auth::user()->id == 5) {
             $tamu = $query->whereIn('lokasi_datang', ['lobi-c', '2c'])->get();
         } else {
             $tamu = $query->get();
         }
 
-        return view('dashboard.pages.tamu.show', compact('tanggal', 'bulan', 'tahun', 'tamu', 'gedung', 'area', 'dataArea'));
+        return view('dashboard.pages.tamu.show', compact('tanggal', 'bulan', 'tahun', 'tamu', 'gedung', 'area', 'instansi', 'dataArea'));
     }
 
     public function filter(Request $request)
@@ -211,7 +211,7 @@ class TamuController extends Controller
             $tamu = $res->where('lokasi_datang', 'lobi')->get();
         } elseif (Auth::user()->id == 4) {
             $tamu = $res->where('lokasi_datang', 'lobi-a')->get();
-        }  elseif (Auth::user()->id == 5) {
+        } elseif (Auth::user()->id == 5) {
             $tamu = $res->whereIn('lokasi_datang', ['lobi-c', '2c'])->get();
         } else {
             $tamu = $res->get();
@@ -272,7 +272,7 @@ class TamuController extends Controller
             $lobi   = 'lobi-a';
             $gedung = $dataGedung->where('id_gedung', 1)->get();
             $area   = $dataArea->where('gedung_id', 1)->get();
-        }  elseif (Auth::user()->id == 5) {
+        } elseif (Auth::user()->id == 5) {
             $lobi   = 'lobi-c';
             $gedung = $dataGedung->where('id_gedung', 1)->get();
             $area   = $dataArea->where('id_gedung', 1)->get();
@@ -378,13 +378,13 @@ class TamuController extends Controller
     {
         $today = Carbon::now()->format('Y-m-d');
         $tamu  = Tamu::where('nomor_visitor', $request->no_visitor)
-                ->where('lokasi_datang', $request->lobi)
-                // ->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y-%m-%d')"), $today)
-                ->where('jam_keluar', null)
-                ->get();
+            ->where('lokasi_datang', $request->lobi)
+            // ->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y-%m-%d')"), $today)
+            ->where('jam_keluar', null)
+            ->get();
 
         if ($tamu->count() == 0) {
-            return back()->with('failed', 'Tamu dengan no. visitor '. $request->no_visitor .' tidak ditemukan');
+            return back()->with('failed', 'Tamu dengan no. visitor ' . $request->no_visitor . ' tidak ditemukan');
         }
 
         return view('survey', compact('tamu'));
@@ -425,9 +425,9 @@ class TamuController extends Controller
     public function surveyGrafik(Request $request)
     {
         $result = Tamu::select('survei', DB::raw("count(id_tamu) as total_tamu "))
-                ->groupBy('survei')
-                ->where('survei', '!=', null)
-                ->get();
+            ->groupBy('survei')
+            ->where('survei', '!=', null)
+            ->get();
 
         return response()->json($result);
     }
@@ -450,8 +450,7 @@ class TamuController extends Controller
 
         if ($lobi == '2c') {
             $dataArea = Area::where('gedung_id', '!=', 3)->where('status', 'aktif')
-                        ->where('nama_lantai', 'like', '%lantai 2%');
-
+                ->where('nama_lantai', 'like', '%lantai 2%');
         } else {
             $dataArea = Area::where('gedung_id', $gedung)->where('status', 'aktif');
         }
@@ -464,5 +463,98 @@ class TamuController extends Controller
 
 
         return view('tamu.test-create', compact('area', 'id', 'gedung', 'lobi', 'instansi'));
+    }
+
+    public function select(Request $request)
+    {
+        $aksi    = $request->aksi;
+        $id      = $request->id;
+        $data    = Tamu::with('instansi', 'area', 'area.gedung')->orderBy('jam_masuk', 'DESC');
+        $no = 1;
+        $response = [];
+
+        if ($request->area || $request->gedung || $request->tanggal || $request->bulan || $request->tahun) {
+            if ($request->area) {
+                $res = $data->where('area_id', $request->area);
+            }
+
+            if ($request->gedung) {
+                $res = $data->whereHas('area', function ($query) use ($request) {
+                    $query->where('gedung_id', $request->gedung);
+                });
+            }
+
+            if ($request->tanggal) {
+                $res = $data->where(DB::raw("DATE_FORMAT(jam_masuk, '%d')"), $request->tanggal);
+            }
+
+            if ($request->bulan) {
+                $res = $data->where(DB::raw("DATE_FORMAT(jam_masuk, '%m')"), $request->bulan);
+            }
+
+            if ($request->tahun) {
+                $res = $data->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), $request->tahun);
+            }
+
+            $result = $res->get();
+        } else {
+            $result = $data->get();
+        }
+
+        foreach ($result as $row) {
+
+            if ($row->status_pengajuan_id == 1) {
+                $status = '<span class="badge badge-success"><i class="fas fa-check-circle"></i> setuju</span>';
+            } else if ($row->status_pengajuan_id == 2) {
+                $status = '<span class="badge badge-danger"><i class="fas fa-times-circle"></i> tolak</span>';
+            } else {
+                $status = '<span class="badge badge-warning"><i class="fas fa-clock"></i> pending</span>';
+            }
+
+            if ($row->status_proses_id >= 2 && $row->status_proses_id < 5) {
+                $proses = '<span class="badge badge-warning"><i class="fas fa-clock"></i> proses</span>';
+            } else if ($row->status_proses_id == 5) {
+                $proses = '<span class="badge badge-success"><i class="fas fa-check-circle"></i> selesai</span>';
+            } else {
+                $proses = '';
+            }
+
+            if (Auth::user()->role_id == 1) {
+                $aksi = '<a href="" onclick="confirmRemove(event, ' . route('tamu.delete', $row->id_tamu) . ')">
+                    <i class="fas fa-trash-alt"></i>
+                </a> ';
+            }
+
+            $response[] = [
+                'no'        => $no,
+                'role'      => Auth::user()->role_id,
+                'id'        => $row->id_tamu,
+                'aksi'      => $aksi,
+                'lokasi'    => $row->area?->gedung->nama_gedung,
+                'masuk'     => Carbon::parse($row->jam_masuk)->isoFormat('HH:mm | DD MMM Y'),
+                'keluar'    => $row->jam_keluar ? Carbon::parse($row->jam_keluar)->isoFormat('HH:mm | DD MMM Y') : '',
+                'novisit'   => $row->nomor_visitor,
+                'nama'      => $row->nama_tamu,
+                'asal'      => $row->nama_instansi,
+                'tujuan'    => $row->nama_tujuan.', '.$row->area->nama_lantai.' - '.$row->area->nama_sub_bagian,
+                'keperluan' => $row->keperluan,
+                'foto'      => '<img src="' . asset('storage/foto_tamu/' . $row->foto_tamu) . '" alt="Foto Tamu" class="img-fluid">'
+            ];
+
+            $no++;
+        }
+
+        return response()->json($response);
+    }
+
+    public function detail($id)
+    {
+        $tamu = Tamu::with('instansi', 'area')->find($id);
+
+        if ($tamu) {
+            return response()->json($tamu);
+        }
+
+        return response()->json(['error' => 'Tamu tidak ditemukan'], 404);
     }
 }

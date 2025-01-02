@@ -49,6 +49,8 @@ Route::get('checkout/tamu/{survei}/{id}', [TamuController::class, 'checkoutStore
 Route::group(['middleware' => 'auth'], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('dashboard/waktu', [DashboardController::class, 'time'])->name('dashboard.time');
+    Route::get('tamu/select', [TamuController::class, 'select'])->name('tamu.select');
+    Route::get('tamu/detail/{id}', [TamuController::class, 'detail'])->name('tamu.detail');
 
     Route::get('user', [UserController::class, 'index'])->name('user.show');
     Route::get('user/detail/{id}', [UserController::class, 'detail'])->name('user.detail');

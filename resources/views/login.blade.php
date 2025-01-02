@@ -53,7 +53,7 @@
                             </div>
                         </div>
                         <div class="form-group mt-5 text-right">
-                            <button type="submit" class="btn btn-secondary text-white border-white" onclick="confirmSubmit(event, 'Masuk', 'Pastikan data sudah terisi dengan benar')">
+                            <button type="submit" class="btn btn-default text-white border-white" onclick="confirmSubmit(event, 'Masuk', 'Pastikan data sudah terisi dengan benar')">
                                 <i class="fa-solid fa-right-to-bracket"></i> Masuk
                             </button>
                         </div>
