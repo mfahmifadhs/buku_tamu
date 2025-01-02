@@ -531,9 +531,9 @@
 
         // Fungsi untuk menampilkan modal dengan data tamu
         window.showModal = function(idTamu) {
-            // Mencari data tamu berdasarkan ID
+            console.log(idTamu)
             $.ajax({
-                url: `{{ url('/tamu/detail/') }}/${idTamu}`, // Ganti dengan URL untuk mengambil data detail tamu
+                url: `{{ url('/tamu/detail/') }}/${idTamu}`,
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {

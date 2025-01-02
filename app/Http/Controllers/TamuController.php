@@ -549,8 +549,7 @@ class TamuController extends Controller
 
     public function detail($id)
     {
-        $tamu = Tamu::where('id_tamu', $id)->first();
-        dd($tamu);
+        $tamu = Tamu::with('instansi', 'area')->find($id);
 
         if ($tamu) {
             return response()->json($tamu);
