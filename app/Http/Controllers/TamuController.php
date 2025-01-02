@@ -528,7 +528,7 @@ class TamuController extends Controller
             $response[] = [
                 'no'        => $no,
                 'role'      => Auth::user()->role_id,
-                'tamu'      => (int) $row->id_tamu,
+                'tamu'      => $row->id_tamu,
                 'aksi'      => $aksi,
                 'lokasi'    => $row->area?->gedung->nama_gedung.' '.$row->id_tamu,
                 'masuk'     => Carbon::parse($row->jam_masuk)->isoFormat('HH:mm | DD MMM Y'),
