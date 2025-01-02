@@ -481,7 +481,7 @@
                                         </a>
                                         ${delLink}
                                     </td>
-                                    <td class="text-left">${item.idTamu}</td>
+                                    <td class="text-left">${item.lokasi}</td>
                                     <td>${item.masuk}</td>
                                     <td>${item.keluar}</td>
                                     <td>${item.novisit}</td>
