@@ -473,15 +473,15 @@
                                 <tr>
                                     <td>${item.no}</td>
                                     <td>
-                                            <a href="javascript:void(0);" onclick="showModal(${item.id})">
-                                                <i class="fas fa-info-circle"></i>
-                                            </a>
+                                        <a href="javascript:void(0);" onclick="showModal(${item.id})">
+                                            <i class="fas fa-info-circle"></i>
+                                        </a>
                                         <a href="${editUrl}" id="edit-link-template">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         ${delLink}
                                     </td>
-                                    <td class="text-left">${item.lokasi}</td>
+                                    <td class="text-left">${item.id}</td>
                                     <td>${item.masuk}</td>
                                     <td>${item.keluar}</td>
                                     <td>${item.novisit}</td>
