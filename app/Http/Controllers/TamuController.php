@@ -470,8 +470,6 @@ class TamuController extends Controller
         $aksi    = $request->aksi;
         $id      = $request->id;
         $data    = Tamu::with('instansi', 'area', 'area.gedung')->orderBy('jam_masuk', 'DESC');
-        $no = 1;
-        $response = [];
 
         if ($request->area || $request->gedung || $request->tanggal || $request->bulan || $request->tahun) {
             if ($request->area) {
@@ -501,6 +499,8 @@ class TamuController extends Controller
             $result = $data->get();
         }
 
+        $no = 1;
+        $response = [];
         foreach ($result as $row) {
 
             if ($row->status_pengajuan_id == 1) {
