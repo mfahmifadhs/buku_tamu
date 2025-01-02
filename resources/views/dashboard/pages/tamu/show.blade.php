@@ -473,9 +473,9 @@
                                 <tr>
                                     <td>${item.no}</td>
                                     <td>
-                                            <a href="javascript:void(0);" class="show-modal" data-id="${item.id}">
-                                                <i class="fas fa-info-circle"></i>
-                                            </a>
+                                        <a href="javascript:void(0);" class="show-modal" data-id="${item.id}">
+                                            <i class="fas fa-info-circle"></i>
+                                        </a>
                                         <a href="${editUrl}" id="edit-link-template">
                                             <i class="fas fa-edit"></i>
                                         </a>
@@ -530,14 +530,15 @@
         }
 
         // Fungsi untuk menampilkan modal dengan data tamu
-        $(document).ready(function () {
-            $('body').on('click', '.show-modal', function () {
+        $(document).ready(function() {
+            $('body').on('click', '.show-modal', function() {
                 const idTamu = $(this).data('id');
                 showModal(idTamu);
             });
         });
 
         function showModal(idTamu) {
+            console.log(idTamu)
             $.ajax({
                 url: `{{ url('/tamu/detail/') }}/${idTamu}`,
                 method: 'GET',
