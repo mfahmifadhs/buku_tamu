@@ -387,7 +387,7 @@
                 }
             },
             error: function(error) {
-                console.error("Error fetching data:", error);
+                // console.error("Error fetching data:", error);
             }
         });
     });
@@ -473,9 +473,9 @@
                                 <tr>
                                     <td>${item.no}</td>
                                     <td>
-                                        <a href="javascript:void(0);" onclick="showModal(${item.id})">
-                                            <i class="fas fa-info-circle"></i>
-                                        </a>
+                                            <a href="javascript:void(0);" class="show-modal" data-id="${item.id}">
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
                                         <a href="${editUrl}" id="edit-link-template">
                                             <i class="fas fa-edit"></i>
                                         </a>
@@ -524,14 +524,20 @@
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error fetching data:', error);
+                    // console.error('Error fetching data:', error);
                 }
             });
         }
 
         // Fungsi untuk menampilkan modal dengan data tamu
-        window.showModal = function(idTamu) {
-            console.log(idTamu)
+        $(document).ready(function () {
+            $('body').on('click', '.show-modal', function () {
+                const idTamu = $(this).data('id');
+                showModal(idTamu);
+            });
+        });
+
+        function showModal(idTamu) {
             $.ajax({
                 url: `{{ url('/tamu/detail/') }}/${idTamu}`,
                 method: 'GET',
@@ -554,7 +560,7 @@
                     $('#detailModal').modal('show');
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error fetching detail:', error);
+                    // console.error('Error fetching detail:', error);
                 }
             });
         };
