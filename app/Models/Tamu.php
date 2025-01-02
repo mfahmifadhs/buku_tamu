@@ -11,9 +11,9 @@ class Tamu extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = "t_tamu";
+    protected $table      = "t_tamu";
     protected $primaryKey = "id_tamu";
-    public $timestamps = false;
+    public $timestamps    = false;
 
     protected $fillable = [
         'id_tamu',

@@ -469,7 +469,7 @@ class TamuController extends Controller
     {
         $aksi    = $request->aksi;
         $id      = $request->id;
-        $data    = Tamu::with('instansi', 'area', 'area.gedung')->orderBy('jam_masuk', 'DESC');
+        $data    = Tamu::orderBy('jam_masuk', 'DESC');
 
         if ($request->area || $request->gedung || $request->tanggal || $request->bulan || $request->tahun) {
             if ($request->area) {
