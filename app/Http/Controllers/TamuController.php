@@ -525,12 +525,13 @@ class TamuController extends Controller
                 </a> ';
             }
 
+            $id = $row->id_tamu;
             $response[] = [
                 'no'        => $no,
                 'role'      => Auth::user()->role_id,
                 'tamu'      => $row->id_tamu,
                 'aksi'      => $aksi,
-                'lokasi'    => $row->id_tamu,
+                'lokasi'    => $id,
                 'masuk'     => Carbon::parse($row->jam_masuk)->isoFormat('HH:mm | DD MMM Y'),
                 'keluar'    => $row->jam_keluar ? Carbon::parse($row->jam_keluar)->isoFormat('HH:mm | DD MMM Y') : '',
                 'novisit'   => $row->nomor_visitor,
