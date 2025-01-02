@@ -44,7 +44,6 @@ class AuthController extends Controller
         return redirect()->route('pages.dashboard')->with('success', 'Selamat Datang');
     }
 
-
     public function keluar()
     {
         Session::flush();
