@@ -539,8 +539,6 @@
         });
     });
 
-
-
     function showModal(idTamu) {
         console.log(idTamu)
         $.ajax({
