@@ -525,7 +525,8 @@ class TamuController extends Controller
                 </a> ';
             }
 
-            $id = $row->id_tamu;
+            $id_tamu = $row->id_tamu;
+            dd($id_tamu);
             $response[] = [
                 'no'        => $no,
                 'role'      => Auth::user()->role_id,
