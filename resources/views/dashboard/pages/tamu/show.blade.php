@@ -482,7 +482,7 @@
                                         ${delLink}
                                     </td>
                                     <td class="text-left">${item.idTamu}</td>
-                                    <td>${index}</td>
+                                    <td>${item.masuk}</td>
                                     <td>${item.keluar}</td>
                                     <td>${item.novisit}</td>
                                     <td class="text-left">${item.nama}</td>
