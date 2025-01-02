@@ -551,7 +551,8 @@ class TamuController extends Controller
     {
         $tamu = Tamu::leftjoin('t_instansi','id_instansi','instansi_id')
                 ->leftjoin('t_gedung_area','id_area','area_id')
-                ->find($id);
+                ->where('id_tamu', $id)
+                ->first();
 
         if ($tamu) {
             return response()->json($tamu);
