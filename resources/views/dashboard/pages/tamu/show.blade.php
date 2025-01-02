@@ -533,39 +533,42 @@
         $(document).ready(function() {
             $('body').on('click', '.show-modal', function() {
                 const idTamu = $(this).data('id');
+                console.log(idTamu)
                 showModal(idTamu);
             });
         });
-
-        function showModal(idTamu) {
-            console.log(idTamu)
-            $.ajax({
-                url: `{{ url('/tamu/detail/') }}/${idTamu}`,
-                method: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    // Mengisi modal dengan data tamu
-                    $('#modal-id').text(data.id_tamu);
-                    $('#modal-novisit').text(data.nomor_visitor);
-                    $('#modal-nipnik').text(data.nik_nip);
-                    $('#modal-nama').text(data.nama_tamu);
-                    $('#modal-asal').text(data.area.nama_lantai + ', ' + data.area.nama_sub_bagian);
-                    $('#modal-notelp').text(data.no_telpon);
-                    $('#modal-alamat').text(data.alamat_tamu);
-
-                    $('#modal-tujuan').text(data.area.nama_lantai + ', ' + data.area.nama_sub_bagian);
-                    $('#modal-keperluan').text(data.keperluan);
-                    $('#modal-foto').attr('src', `{{ asset('storage/foto_tamu/') }}/${data.foto_tamu}`);
-
-                    // Menampilkan modal
-                    $('#detailModal').modal('show');
-                },
-                error: function(xhr, status, error) {
-                    // console.error('Error fetching detail:', error);
-                }
-            });
-        };
     });
+
+
+
+    function showModal(idTamu) {
+        console.log(idTamu)
+        $.ajax({
+            url: `{{ url('/tamu/detail/') }}/${idTamu}`,
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // Mengisi modal dengan data tamu
+                $('#modal-id').text(data.id_tamu);
+                $('#modal-novisit').text(data.nomor_visitor);
+                $('#modal-nipnik').text(data.nik_nip);
+                $('#modal-nama').text(data.nama_tamu);
+                $('#modal-asal').text(data.area.nama_lantai + ', ' + data.area.nama_sub_bagian);
+                $('#modal-notelp').text(data.no_telpon);
+                $('#modal-alamat').text(data.alamat_tamu);
+
+                $('#modal-tujuan').text(data.area.nama_lantai + ', ' + data.area.nama_sub_bagian);
+                $('#modal-keperluan').text(data.keperluan);
+                $('#modal-foto').attr('src', `{{ asset('storage/foto_tamu/') }}/${data.foto_tamu}`);
+
+                // Menampilkan modal
+                $('#detailModal').modal('show');
+            },
+            error: function(xhr, status, error) {
+                // console.error('Error fetching detail:', error);
+            }
+        });
+    };
 </script>
 @endsection
 @endsection
