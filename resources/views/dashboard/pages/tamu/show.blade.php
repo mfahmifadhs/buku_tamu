@@ -442,11 +442,11 @@
                 },
                 dataType: 'json',
                 success: function(response) {
-                    console.log(response)
                     let tbody = $('.table tbody');
-                    tbody.empty();
+                    tbody.empty(); // Mengosongkan tbody sebelum menambahkan data
 
                     if (response.message) {
+                        // Jika ada pesan dalam respons (misalnya "No data available")
                         tbody.append(`
                         <tr>
                             <td colspan="9">${response.message}</td>
@@ -454,7 +454,7 @@
                     `);
                     } else {
                         let edit = "{{ route('tamu.edit', ':id') }}";
-
+                        // Jika ada data
                         $.each(response, function(index, item) {
                             let delLink = '';
                             let editUrl = edit.replace(':id', item.id);
