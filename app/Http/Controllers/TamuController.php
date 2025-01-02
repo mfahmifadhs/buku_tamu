@@ -550,7 +550,7 @@ class TamuController extends Controller
     public function detail($id)
     {
         $tamu = Tamu::leftjoin('t_instansi','id_instansi','instansi_id')
-                ->leftjoin('t_area','id_area','area_id')
+                ->leftjoin('t_gedung_area','id_area','area_id')
                 ->find($id);
 
         if ($tamu) {
