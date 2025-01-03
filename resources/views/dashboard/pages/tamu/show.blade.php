@@ -456,12 +456,13 @@
                         let edit = "{{ route('tamu.edit', ':id') }}";
                         // Jika ada data
                         $.each(response, function(index, item) {
+                            let idTamu  = BigInt(item.tamu.replace(/^id/, ""));
                             let delLink = '';
-                            let editUrl = edit.replace(':id', item.id);
+                            let editUrl = edit.replace(':id', idTamu);
 
                             if (item.role == 1) {
                                 let del = "{{ route('tamu.delete', ':id') }}";
-                                let deleteUrl = del.replace(':id', item.id);
+                                let deleteUrl = del.replace(':id', idTamu);
                                 delLink = `
                                     <a href="" id="edit-link-template" onclick="confirmRemove(event, ${editUrl})">
                                         <i class="fas fa-trash-alt"></i>
@@ -473,7 +474,7 @@
                                 <tr>
                                     <td>${item.no}</td>
                                     <td>
-                                        <a href="javascript:void(0);" onclick="showModal(${item.id})">
+                                        <a href="javascript:void(0);" onclick="showModal(${idTamu})">
                                             <i class="fas fa-info-circle"></i>
                                         </a>
                                         <a href="${editUrl}" id="edit-link-template">
@@ -481,7 +482,7 @@
                                         </a>
                                         ${delLink}
                                     </td>
-                                    <td class="text-left">${item.tamu}</td>
+                                    <td class="text-left">${item.tamu.replace(/^id/, "")}</td>
                                     <td>${item.masuk}</td>
                                     <td>${item.keluar}</td>
                                     <td>${item.novisit}</td>
@@ -530,7 +531,6 @@
 
             // Fungsi untuk menampilkan modal dengan data tamu
             window.showModal = function(idTamu) {
-                console.log(idTamu)
                 $.ajax({
                     url: `{{ url('/tamu/detail/') }}/${idTamu}`,
                     method: 'GET',
