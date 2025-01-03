@@ -315,25 +315,30 @@
                     </div>
                     <div class="form-group">
                         <b>Pilih Gedung</b>
-                        <select name="gedung" class="form-control form-control-sm">
-                            <option value="">Seluruh Gedung</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <b>Pilih Sub Bagian</b>
-                        <select id="area" name="area" class="form-control form-control-sm" style="width: 100%;">
-                            <option value="">Seluruh Sub Bagian</option>
-                            @foreach ($dataArea as $row)
-                            <option value="{{ $row->id_area }}" <?php echo $row->id_area == $area ? 'selected' : '' ?>>
-                                {{ $gedung == 2 ? $row->nama_lantai.' - '.$row->nama_sub_bagian : $row->nama_lantai.' ('.$row->nama_ruang.') - '. $row->nama_sub_bagian }}
+                        <select id="gedung" name="gedung" class="form-control form-control-sm text-center">
+                            <option value="semua">Seluruh Gedung</option>
+                            @foreach ($listGedung as $row)
+                            <option value="{{ $row->id_gedung }}" <?php echo $gedung == $row->id_gedung ? 'selected' : null; ?>>
+                                {{ $row->nama_gedung }}
                             </option>
                             @endforeach
                         </select>
                     </div>
+                    <!-- <div class="form-group">
+                        <b>Pilih Sub Bagian</b>
+                        <select id="area" name="area" class="form-control form-control-sm text-center" style="width: 100%;">
+                            <option value="semua">Seluruh Sub Bagian</option>
+                        </select>
+                    </div> -->
                     <div class="form-group">
                         <b>Pilih Asal Instansi</b>
-                        <select id="instansi" class="form-control form-control-sm text-center" name="status">
-                            <option value="">Semua</option>
+                        <select id="instansi" class="form-control form-control-sm text-center" name="instansi">
+                            <option value="semua">Semua Instansi {{ $instansi }}</option>
+                            @foreach ($listInstansi as $row)
+                            <option value="{{ $row->id_instansi }}" <?php echo $instansi == $row->id_instansi ? 'selected' : null; ?>>
+                                {{ $row->instansi }}
+                            </option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -368,27 +373,32 @@
         });
     }
 
-    $(function() {
-        var dataSelected = '{{  $gedung }}';
-        var select = $('[name="gedung"]');
+    // Pilih Gedung dan Area
+    $(document).ready(function() {
+        $('#gedung').on('change', function() {
+            let gedungId = $(this).val();
 
-        $.ajax({
-            url: "{{ route('gedung.select') }}",
-            type: "GET",
-            dataType: 'json',
-            success: function(response) {
-                select.empty();
-                $.each(response, function(key, val) {
-                    var selected = dataSelected == val.id ? 'selected' : '';
-                    select.append('<option value="' + val.id + '" ' + selected + '>' + val.text + '</option>');
+            $('#area').html('<option value="">Memuat Sub Bagian...</option>');
+
+            if (gedungId) {
+                $.ajax({
+                    url: `{{ route('area.select', ':id') }}`.replace(':id', gedungId),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data)
+                        $('#area').html('<option value="">Seluruh Sub Bagian</option>');
+
+                        $.each(data, function(key, value) {
+                            $('#area').append(`<option value="${value.id}">${value.text}</option>`);
+                        });
+                    },
+                    error: function() {
+                        $('#area').html('<option value="">Gagal memuat data</option>');
+                    }
                 });
-
-                if (dataSelected) {
-                    select.val(dataSelected);
-                }
-            },
-            error: function(error) {
-                // console.error("Error fetching data:", error);
+            } else {
+                $('#area').html('<option value="">Seluruh Sub Bagian</option>');
             }
         });
     });
@@ -425,10 +435,10 @@
         let tanggal = $('#tanggal').val();
         let bulan = $('#bulan').val();
         let tahun = $('#tahun').val();
-        let area = $('#area').val();
+        let gedung = $('#gedung').val();
         let instansi = $('#instansi').val();
 
-        loadTable(tanggal, bulan, tahun, area, instansi);
+        loadTable(tanggal, bulan, tahun, gedung, instansi);
 
         function loadTable() {
             $.ajax({
@@ -438,7 +448,7 @@
                     tanggal: tanggal,
                     bulan: bulan,
                     tahun: tahun,
-                    area: area,
+                    gedung: gedung,
                     instansi: instansi
                 },
                 dataType: 'json',
@@ -456,7 +466,7 @@
                         let edit = "{{ route('tamu.edit', ':id') }}";
                         // Jika ada data
                         $.each(response, function(index, item) {
-                            let idTamu  = BigInt(item.tamu.replace(/^id/, ""));
+                            let idTamu = BigInt(item.tamu.replace(/^id/, ""));
                             let delLink = '';
                             let editUrl = edit.replace(':id', idTamu);
 

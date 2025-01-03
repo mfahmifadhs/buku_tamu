@@ -144,16 +144,14 @@ class TamuController extends Controller
         $tanggal  = $request->get('tanggal') == 'semua' ? null : ($request->get('tanggal') ? $request->get('tanggal') : date('d'));
         $bulan    = $request->get('bulan') == 'semua' ? null : ($request->get('bulan') ? $request->get('bulan') : date('m'));
         $tahun    = $request->get('tahun') == 'semua' ? null : ($request->get('tahun') ? $request->get('tahun') : date('Y'));
-        $area     = $request->get('area');
-        $instansi = $request->get('instansi');
-        $dataArea = [];
-        $gedung   = '';
-        $area     = '';
+        $gedung   = $request->get('gedung') == 'semua' ? null : $request->get('gedung');
+        $instansi = $request->get('instansi') == null ? 'semua' : $request->get('instansi');
+        $listGedung   = Gedung::orderBy('nama_gedung', 'ASC')->get();
+        $listInstansi = Instansi::orderBy('id_instansi', 'DESC')->get();
 
-        $data     = Tamu::orderBy('id_tamu', 'DESC')->join('t_gedung_area', 'id_area', 'area_id');
-        $cekArea  = Area::where('id_area', $area)->where('gedung_id', $gedung)->first();
+        $data     = Tamu::orderBy('id_tamu', 'DESC')->join('t_gedung_area', 'id_area', 'area_id')->join('t_gedung','id_gedung','gedung_id');
 
-        if ($tanggal || $bulan || $tahun || $gedung || $cekArea) {
+        if ($tanggal || $bulan || $tahun || $gedung || $instansi) {
             if ($tanggal) {
                 $res  = $data->where(DB::raw("DATE_FORMAT(jam_masuk, '%d')"), $tanggal);
             }
@@ -168,11 +166,10 @@ class TamuController extends Controller
 
             if ($gedung) {
                 $res  = $data->where('gedung_id', $gedung);
-                $dataArea = Area::where('gedung_id', $gedung)->get();
             }
 
-            if ($cekArea) {
-                $res = $data->where('area_id', $area);
+            if ($instansi) {
+                $res = $data->where('instansi_id', $instansi);
             } else {
                 $area = '';
             }
@@ -196,7 +193,7 @@ class TamuController extends Controller
             return Excel::download(new TamuExport($request->all()), 'tamu.xlsx');
         }
 
-        return view('dashboard.pages.tamu.show', compact('tanggal', 'bulan', 'tahun', 'tamu', 'gedung', 'area', 'instansi', 'dataArea'));
+        return view('dashboard.pages.tamu.show', compact('tanggal', 'bulan', 'tahun', 'tamu', 'gedung', 'listGedung', 'listInstansi', 'instansi'));
     }
 
     public function filter(Request $request)
@@ -499,22 +496,22 @@ class TamuController extends Controller
 
     public function select(Request $request)
     {
-        $tanggal = $request->tanggal == 'semua' ? null : $request->tanggal;
-        $bulan   = $request->bulan == 'semua' ? null : $request->bulan;
-        $tahun   = $request->tahun == 'semua' ? null : $request->tahun;
+        $tanggal  = $request->tanggal == 'semua' ? null : $request->tanggal;
+        $bulan    = $request->bulan == 'semua' ? null : $request->bulan;
+        $tahun    = $request->tahun == 'semua' ? null : $request->tahun;
+        $gedung   = $request->gedung == 'semua' ? null : $request->gedung;
+        $instansi = $request->instansi == 'semua' ? null : $request->instansi;
         $aksi    = $request->aksi;
         $id      = $request->id;
-        $data    = Tamu::orderBy('jam_masuk', 'DESC');
+        $data     = Tamu::orderBy('id_tamu', 'DESC')->join('t_gedung_area', 'id_area', 'area_id')->join('t_gedung','id_gedung','gedung_id');
 
-        if ($request->area || $request->gedung || $tanggal || $bulan || $tahun) {
-            if ($request->area) {
-                $res = $data->where('area_id', $request->area);
+        if ($instansi || $gedung || $tanggal || $bulan || $tahun) {
+            if ($instansi || $instansi == '0') {
+                $res = $data->where('instansi_id', $instansi);
             }
 
-            if ($request->gedung) {
-                $res = $data->whereHas('area', function ($query) use ($request) {
-                    $query->where('gedung_id', $request->gedung);
-                });
+            if ($gedung) {
+                $res  = $data->where('gedung_id', $gedung);
             }
 
             if ($tanggal) {

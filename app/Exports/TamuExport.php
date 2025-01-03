@@ -19,11 +19,11 @@ class TamuExport implements FromCollection, WithHeadings, WithMapping
 
     function __construct($request)
     {
-        $this->tanggal = $request['tanggal'] == 'semua' ? null : ($request['tanggal'] ? $request['tanggal'] : date('d'));
-        $this->bulan   = $request['bulan'] == 'semua' ? null : ($request['bulan'] ? $request['bulan'] : date('d'));;
-        $this->tahun   = $request['tahun'] == 'semua' ? null : ($request['tahun'] ? $request['tahun'] : date('d'));;
-        $this->gedung  = $request['gedung'];
-        $this->area    = $request['area'];
+        $this->tanggal  = $request['tanggal'] == 'semua' ? null : ($request['tanggal'] ? $request['tanggal'] : date('d'));
+        $this->bulan    = $request['bulan'] == 'semua' ? null : ($request['bulan'] ? $request['bulan'] : date('d'));
+        $this->tahun    = $request['tahun'] == 'semua' ? null : ($request['tahun'] ? $request['tahun'] : date('d'));
+        $this->gedung   = $request['gedung'] == 'semua' ? null : $request['gedung'];
+        $this->instansi = $request['instansi'] == 'semua' ? null : $request['instansi'] ;
     }
 
     public function collection()
@@ -66,8 +66,8 @@ class TamuExport implements FromCollection, WithHeadings, WithMapping
             $data->where('gedung_id', $this->gedung);
         }
 
-        if ($cekArea) {
-            $data->where('area_id', $this->area);
+        if ($this->instansi) {
+            $data->where('instansi_id', $this->instansi);
         }
 
         $tamu = $data->get();
