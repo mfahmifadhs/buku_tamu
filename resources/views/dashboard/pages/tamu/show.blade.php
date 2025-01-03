@@ -474,7 +474,7 @@
                                 <tr>
                                     <td>${item.no}</td>
                                     <td>
-                                        <a href="javascript:void(0);" onclick="showModal(${idTamu})">
+                                        <a href="javascript:void(0);" onclick="showModal(${item.tamu})">
                                             <i class="fas fa-info-circle"></i>
                                         </a>
                                         <a href="${editUrl}" id="edit-link-template">
