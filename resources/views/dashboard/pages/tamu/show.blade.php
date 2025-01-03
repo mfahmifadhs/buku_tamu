@@ -531,7 +531,7 @@
 
             // Fungsi untuk menampilkan modal dengan data tamu
             window.showModal = function(tamu) {
-                console.log('cek' - tamu)
+                console.log('cek' +  tamu)
                 $.ajax({
                     url: `{{ url('/tamu/detail/') }}/${tamu}`,
                     method: 'GET',
