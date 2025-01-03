@@ -28,7 +28,6 @@ class TamuExport implements FromCollection, WithHeadings, WithMapping
 
     public function collection()
     {
-        $cekArea = Area::where('id_area', $this->area)->where('gedung_id', $this->gedung)->first();
         $data = Tamu::join('t_gedung_area', 'id_area', 'area_id')
             ->join('t_gedung', 'id_gedung', 'gedung_id')
             ->select(
