@@ -443,10 +443,9 @@
                 dataType: 'json',
                 success: function(response) {
                     let tbody = $('.table tbody');
-                    tbody.empty(); // Mengosongkan tbody sebelum menambahkan data
+                    tbody.empty();
 
                     if (response.message) {
-                        // Jika ada pesan dalam respons (misalnya "No data available")
                         tbody.append(`
                         <tr>
                             <td colspan="9">${response.message}</td>
@@ -531,9 +530,10 @@
 
             // Fungsi untuk menampilkan modal dengan data tamu
             window.showModal = function(tamu) {
-                console.log('cek' +  tamu)
+                let idModal  = BigInt(tamu.replace(/^id/, ""));
+                console.log('cek' +  idModal)
                 $.ajax({
-                    url: `{{ url('/tamu/detail/') }}/${tamu}`,
+                    url: `{{ url('/tamu/detail/') }}/${idModal}`,
                     method: 'GET',
                     dataType: 'json',
                     success: function(data) {
