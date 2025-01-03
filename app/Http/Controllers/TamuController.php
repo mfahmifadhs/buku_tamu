@@ -141,9 +141,9 @@ class TamuController extends Controller
 
     public function show(Request $request)
     {
-        $tanggal  = $request->get('tanggal');
-        $bulan    = $request->get('bulan');
-        $tahun    = $request->get('tahun');
+        $tanggal = $request->get('tanggal') ?? date('d');
+        $bulan   = $request->get('bulan') ?? date('m');
+        $tahun   = $request->get('tahun') ?? date('Y');
         $area     = $request->get('area');
         $instansi = $request->get('instansi');
         $dataArea = [];
@@ -530,14 +530,14 @@ class TamuController extends Controller
                 'role'      => Auth::user()->role_id,
                 'id'        => $row->id_tamu,
                 'aksi'      => $aksi,
-                'tamu'      => 'id'.$row->id_tamu,
+                'tamu'      => 'id' . $row->id_tamu,
                 'lokasi'    => $row->area?->gedung->nama_gedung,
                 'masuk'     => Carbon::parse($row->jam_masuk)->isoFormat('HH:mm | DD MMM Y'),
                 'keluar'    => $row->jam_keluar ? Carbon::parse($row->jam_keluar)->isoFormat('HH:mm | DD MMM Y') : '',
                 'novisit'   => $row->nomor_visitor,
                 'nama'      => $row->nama_tamu,
                 'asal'      => $row->nama_instansi,
-                'tujuan'    => $row->nama_tujuan.', '.$row->area->nama_lantai.' - '.$row->area->nama_sub_bagian,
+                'tujuan'    => $row->nama_tujuan . ', ' . $row->area->nama_lantai . ' - ' . $row->area->nama_sub_bagian,
                 'keperluan' => $row->keperluan,
                 'foto'      => '<img src="' . asset('storage/foto_tamu/' . $row->foto_tamu) . '" alt="Foto Tamu" class="img-fluid">'
             ];
