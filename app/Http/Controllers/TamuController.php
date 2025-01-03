@@ -456,6 +456,7 @@ class TamuController extends Controller
         $result = Tamu::select('survei', DB::raw("count(id_tamu) as total_tamu "))
             ->groupBy('survei')
             ->where('survei', '!=', null)
+            ->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), Carbon::now()->format('Y'))
             ->get();
 
         return response()->json($result);
