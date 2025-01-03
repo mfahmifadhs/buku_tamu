@@ -473,7 +473,7 @@
                                 <tr>
                                     <td>${item.no}</td>
                                     <td>
-                                        <a href="javascript:void(0);" onclick="showModal('${item.tamu}')">
+                                        <a href="javascript:void(0);" onclick="showModal('${idTamu}')">
                                             <i class="fas fa-info-circle"></i>
                                         </a>
                                         <a href="${editUrl}" id="edit-link-template">
@@ -531,7 +531,7 @@
             // Fungsi untuk menampilkan modal dengan data tamu
             window.showModal = function(tamu) {
                 let idModal  = BigInt(tamu.replace(/^id/, ""));
-                console.log('cek' +  idModal)
+                console.log('cek' +  tamu)
 
             };
         }
