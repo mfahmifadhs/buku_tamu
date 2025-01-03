@@ -19,9 +19,9 @@ class TamuExport implements FromCollection, WithHeadings, WithMapping
 
     function __construct($request)
     {
-        $this->tanggal = $request['tanggal'];
-        $this->bulan   = $request['bulan'];
-        $this->tahun   = $request['tahun'];
+        $this->tanggal = $request['tanggal'] == 'semua' ? null : ($request['tanggal'] ? $request['tanggal'] : date('d'));
+        $this->bulan   = $request['bulan'] == 'semua' ? null : ($request['bulan'] ? $request['bulan'] : date('d'));;
+        $this->tahun   = $request['tahun'] == 'semua' ? null : ($request['tahun'] ? $request['tahun'] : date('d'));;
         $this->gedung  = $request['gedung'];
         $this->area    = $request['area'];
     }
