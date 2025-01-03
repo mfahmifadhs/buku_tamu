@@ -482,7 +482,7 @@
                                         </a>
                                         ${delLink}
                                     </td>
-                                    <td class="text-left">${item.tamu.replace(/^id/, "")}</td>
+                                    <td class="text-left">${item.lokasi}</td>
                                     <td>${item.masuk}</td>
                                     <td>${item.keluar}</td>
                                     <td>${item.novisit}</td>
@@ -530,9 +530,10 @@
             });
 
             // Fungsi untuk menampilkan modal dengan data tamu
-            window.showModal = function(idTamu) {
+            window.showModal = function(tamu) {
+                console.log('cek' - tamu)
                 $.ajax({
-                    url: `{{ url('/tamu/detail/') }}/${idTamu}`,
+                    url: `{{ url('/tamu/detail/') }}/${tamu}`,
                     method: 'GET',
                     dataType: 'json',
                     success: function(data) {
