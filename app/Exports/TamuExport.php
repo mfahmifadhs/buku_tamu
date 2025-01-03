@@ -74,7 +74,7 @@ class TamuExport implements FromCollection, WithHeadings, WithMapping
         return $tamu;
     }
 
-    
+
 
     public function map($tamu): array
     {
@@ -94,7 +94,7 @@ class TamuExport implements FromCollection, WithHeadings, WithMapping
             $tamu->nama_gedung,
             $tamu->nama_lantai,
             $tamu->nama_sub_bagian,
-            '=IMAGE("https://buku-tamu.kemkes.go.id/storage/foto_tamu/'. $tamu->foto_tamu .'", 4, 100, 100)'
+            '=IMAGE("https://buku-tamu.kemkes.go.id/storage/foto_tamu/'. $tamu->foto_tamu .'", 2)'
         ];
     }
 

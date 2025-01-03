@@ -141,27 +141,59 @@ class TamuController extends Controller
 
     public function show(Request $request)
     {
-        $tanggal = $request->get('tanggal') ?? date('d');
-        $bulan   = $request->get('bulan') ?? date('m');
-        $tahun   = $request->get('tahun') ?? date('Y');
+        $tanggal  = $request->get('tanggal') == 'semua' ? null : ($request->get('tanggal') ? $request->get('tanggal') : date('d'));
+        $bulan    = $request->get('bulan') == 'semua' ? null : ($request->get('bulan') ? $request->get('bulan') : date('m'));
+        $tahun    = $request->get('tahun') == 'semua' ? null : ($request->get('tahun') ? $request->get('tahun') : date('Y'));
         $area     = $request->get('area');
         $instansi = $request->get('instansi');
         $dataArea = [];
         $gedung   = '';
         $area     = '';
 
-        $query    = Tamu::orderBy('id_tamu', 'DESC')
-            ->where(DB::raw("DATE_FORMAT(jam_masuk, '%d')"), $tanggal)
-            ->where(DB::raw("DATE_FORMAT(jam_masuk, '%m')"), $bulan)->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), $tahun);
+        $data     = Tamu::orderBy('id_tamu', 'DESC')->join('t_gedung_area', 'id_area', 'area_id');
+        $cekArea  = Area::where('id_area', $area)->where('gedung_id', $gedung)->first();
+
+        if ($tanggal || $bulan || $tahun || $gedung || $cekArea) {
+            if ($tanggal) {
+                $res  = $data->where(DB::raw("DATE_FORMAT(jam_masuk, '%d')"), $tanggal);
+            }
+
+            if ($bulan) {
+                $res  = $data->where(DB::raw("DATE_FORMAT(jam_masuk, '%m')"), $bulan);
+            }
+
+            if ($tahun) {
+                $res  = $data->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), $tahun);
+            }
+
+            if ($gedung) {
+                $res  = $data->where('gedung_id', $gedung);
+                $dataArea = Area::where('gedung_id', $gedung)->get();
+            }
+
+            if ($cekArea) {
+                $res = $data->where('area_id', $area);
+            } else {
+                $area = '';
+            }
+        } else {
+            $res    = $data;
+        }
 
         if (Auth::user()->id == 3) {
-            $tamu = $query->where('lokasi_datang', 'lobi')->get();
+            $tamu = $res->where('lokasi_datang', 'lobi')->get();
         } elseif (Auth::user()->id == 4) {
-            $tamu = $query->where('lokasi_datang', 'lobi-a')->get();
+            $tamu = $res->where('lokasi_datang', 'lobi-a')->get();
         } elseif (Auth::user()->id == 5) {
-            $tamu = $query->whereIn('lokasi_datang', ['lobi-c', '2c'])->get();
+            $tamu = $res->whereIn('lokasi_datang', ['lobi-c', '2c'])->get();
         } else {
-            $tamu = $query->get();
+            $tamu = $res->get();
+        }
+
+        if ($request->downloadFile == 'pdf') {
+            return view('dashboard.pages.tamu.pdf', compact('tamu'));
+        } elseif ($request->downloadFile == 'excel') {
+            return Excel::download(new TamuExport($request->all()), 'tamu.xlsx');
         }
 
         return view('dashboard.pages.tamu.show', compact('tanggal', 'bulan', 'tahun', 'tamu', 'gedung', 'area', 'instansi', 'dataArea'));
@@ -467,11 +499,14 @@ class TamuController extends Controller
 
     public function select(Request $request)
     {
+        $tanggal = $request->tanggal == 'semua' ? null : $request->tanggal;
+        $bulan   = $request->bulan == 'semua' ? null : $request->bulan;
+        $tahun   = $request->tahun == 'semua' ? null : $request->tahun;
         $aksi    = $request->aksi;
         $id      = $request->id;
         $data    = Tamu::orderBy('jam_masuk', 'DESC');
 
-        if ($request->area || $request->gedung || $request->tanggal || $request->bulan || $request->tahun) {
+        if ($request->area || $request->gedung || $tanggal || $bulan || $tahun) {
             if ($request->area) {
                 $res = $data->where('area_id', $request->area);
             }
@@ -482,16 +517,16 @@ class TamuController extends Controller
                 });
             }
 
-            if ($request->tanggal) {
-                $res = $data->where(DB::raw("DATE_FORMAT(jam_masuk, '%d')"), $request->tanggal);
+            if ($tanggal) {
+                $res = $data->where(DB::raw("DATE_FORMAT(jam_masuk, '%d')"), $tanggal);
             }
 
-            if ($request->bulan) {
-                $res = $data->where(DB::raw("DATE_FORMAT(jam_masuk, '%m')"), $request->bulan);
+            if ($bulan) {
+                $res = $data->where(DB::raw("DATE_FORMAT(jam_masuk, '%m')"), $bulan);
             }
 
-            if ($request->tahun) {
-                $res = $data->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), $request->tahun);
+            if ($tahun) {
+                $res = $data->where(DB::raw("DATE_FORMAT(jam_masuk, '%Y')"), $tahun);
             }
 
             $result = $res->get();

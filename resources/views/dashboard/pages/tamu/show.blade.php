@@ -277,13 +277,13 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('tamu.show') }}" method="GET">
+            <form id="form" action="{{ route('tamu.show') }}" method="GET">
                 @csrf
                 <div class="modal-body text-xs">
                     <div class="form-group">
                         <b>Pilih Tanggal</b>
                         <select id="tanggal" name="tanggal" class="form-control form-control-sm border-dark rounded text-center">
-                            <option value="">Semua Tanggal</option>
+                            <option value="semua">Semua Tanggal</option>
                             @foreach(range(1, 31) as $dateNumber)
                             @php $rowTgl = Carbon\Carbon::create()->day($dateNumber)->isoFormat('DD'); @endphp
                             <option value="{{ $rowTgl }}" <?php echo $tanggal == $rowTgl ? 'selected' : '' ?>>
@@ -295,7 +295,7 @@
                     <div class="form-group">
                         <b>Pilih Bulan</b>
                         <select id="bulan" name="bulan" class="form-control form-control-sm border-dark rounded text-center">
-                            <option value="">Semua Bulan</option>
+                            <option value="semua">Semua Bulan</option>
                             @foreach(range(1, 12) as $monthNumber)
                             @php $rowBulan = Carbon\Carbon::create()->month($monthNumber); @endphp
                             <option value="{{ $rowBulan->isoFormat('MM') }}" <?php echo $bulan == $rowBulan->isoFormat('M') ? 'selected' : '' ?>>
@@ -307,6 +307,7 @@
                     <div class="form-group">
                         <b>Pilih Tahun</b>
                         <select id="tahun" class="form-control form-control-sm text-center" name="tahun">
+                            <option value="semua">Semua Tahun</option>
                             <option value="2025" <?php echo $tahun == '2025' ? 'selected' : ''; ?>>2025</option>
                             <option value="2024" <?php echo $tahun == '2024' ? 'selected' : ''; ?>>2024</option>
                             <option value="2023" <?php echo $tahun == '2023' ? 'selected' : ''; ?>>2023</option>
