@@ -25,7 +25,6 @@
                         <li class="breadcrumb-item active">Daftar Tamu</li>
                     </ol>
                 </div>
-                @if (Auth::user()->role_id != 2)
                 <div class="col-sm-6 text-right mt-4">
                     <a id="downloadButton" onclick="downloadFile('excel')" class="btn btn-csv bg-success border-success" target="__blank">
                         <span class="btn btn-success btn-sm"><i class="fas fa-download"></i></span>
@@ -42,7 +41,6 @@
                         <small>Filter</small>
                     </a>
                 </div>
-                @endif
             </div>
         </div>
     </div>
