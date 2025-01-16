@@ -550,7 +550,7 @@
                         $('#modal-nipnik').text(data.nik_nip);
                         $('#modal-nama').text(data.nama_tamu);
                         $('#modal-asal').text(data.area.nama_lantai + ', ' + data.area.nama_sub_bagian);
-                        $('#modal-notelp').text(data.no_telpon);
+                        $('#modal-nohp').text(data.no_telpon);
                         $('#modal-alamat').text(data.alamat_tamu);
 
                         $('#modal-tujuan').text(data.area.nama_lantai + ', ' + data.area.nama_sub_bagian);
