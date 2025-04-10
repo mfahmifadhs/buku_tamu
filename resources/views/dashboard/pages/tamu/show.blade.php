@@ -26,7 +26,7 @@
                     </ol>
                 </div>
                 <div class="col-sm-6 text-right mt-4">
-                    <a id="downloadButton" onclick="downloadFile('excel')" class="btn btn-csv bg-success border-success" target="__blank">
+                    <!-- <a id="downloadButton" onclick="downloadFile('excel')" class="btn btn-csv bg-success border-success" target="__blank">
                         <span class="btn btn-success btn-sm"><i class="fas fa-download"></i></span>
                         <span id="downloadSpinner" class="spinner-border spinner-border-sm" style="display: none;" role="status" aria-hidden="true"></span>
                         <small>Download Excel</small>
@@ -35,7 +35,7 @@
                         <span class="btn btn-danger btn-sm"><i class="fas fa-print"></i></span>
                         <span id="downloadSpinner" class="spinner-border spinner-border-sm" style="display: none;" role="status" aria-hidden="true"></span>
                         <small>Cetak</small>
-                    </a>
+                    </a> -->
                     <a href="#" class="btn btn-csv bg-primary border-primary" data-toggle="modal" data-target="#filterModal">
                         <span class="btn btn-primary btn-sm"><i class="fas fa-filter"></i></span>
                         <small>Filter</small>
@@ -517,7 +517,7 @@
                                 className: 'bg-danger',
                                 title: 'show',
                                 exportOptions: {
-                                    columns: [2, 3, 4, 5, 6, 7]
+                                    columns: ':not(:nth-child(2))'
                                 },
                             }, {
                                 extend: 'excel',
