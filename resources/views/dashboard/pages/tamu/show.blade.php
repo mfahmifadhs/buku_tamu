@@ -26,12 +26,12 @@
                     </ol>
                 </div>
                 <div class="col-sm-6 text-right mt-4">
-                    <!-- <a id="downloadButton" onclick="downloadFile('excel')" class="btn btn-csv bg-success border-success" target="__blank">
+                    <a id="downloadButton" onclick="downloadFile('excel')" class="btn btn-csv bg-success border-success" target="__blank">
                         <span class="btn btn-success btn-sm"><i class="fas fa-download"></i></span>
                         <span id="downloadSpinner" class="spinner-border spinner-border-sm" style="display: none;" role="status" aria-hidden="true"></span>
-                        <small>Download Excel</small>
+                        <small>Download Excel (Foto)</small>
                     </a>
-                    <a id="downloadButton" onclick="downloadFile('pdf')" class="btn btn-csv bg-danger border-danger" target="__blank">
+                    <!-- <a id="downloadButton" onclick="downloadFile('pdf')" class="btn btn-csv bg-danger border-danger" target="__blank">
                         <span class="btn btn-danger btn-sm"><i class="fas fa-print"></i></span>
                         <span id="downloadSpinner" class="spinner-border spinner-border-sm" style="display: none;" role="status" aria-hidden="true"></span>
                         <small>Cetak</small>
